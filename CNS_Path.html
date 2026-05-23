@@ -438,6 +438,7 @@
         { key: "ihc", label: "IHC / Stain" },
         { key: "clinical", label: "臨床表現" },
         { key: "treatment", label: "治療" },
+        { key: "other", label: "其他（新研究）" },
         { key: "risk_factor", label: "風險因子 / 環境" }
       ],
       rows: [
@@ -453,6 +454,7 @@
           ihc: "Aβ-IHC；phospho-tau IHC；Congo red（CAA）",
           clinical: "隱匿發病：記憶喪失→失智；onset to death 5–10 years；prodromal fMRI：hippocampus/neocortex hyperactivity",
           treatment: "症狀：cholinesterase inhibitors；中晚期 + memantine（減少 excitotoxicity）；Disease-modifying：anti-Aβ antibody（lecanemab），但有 ARIA（brain swelling / bleeding）風險",
+          other: "新研究方向：CART-A（AAV + GFAP promoter → astrocyte anti-Aβ，繞過 ARIA）；CART-M（microglia）；CART-O（oligodendrocyte）；iPSC-based 細胞療法（取患者 iPSC → 分化 → 移植補充受損神經元）；anti-tau 策略；anti-C1q（ANX-005）",
           risk_factor: "睡眠不足（Aβ 清除↓）；缺乏運動；頭部外傷史；心血管疾病；APOE ε4（sporadic 最重要）；Down syndrome（trisomy 21，APP dosage↑，20–30 歲發病）"
         },
         {
@@ -477,8 +479,9 @@
           spread: "額顳葉為主；C9orf72：FTD / ALS / 混合；TDP-43 prion-like 擴散",
           micro: "TDP-43 cytoplasmic inclusions（nuclear↓）；GRN：needle-like intranuclear；C9orf72：dipeptide inclusion",
           ihc: "TDP-43 IHC（cytoplasmic↑, nuclear↓）；FUS IHC；GRN mutation → needle-like intranuclear TDP-43 inclusion（TDP-43 immunostain 特徵性形態，強相關 Progranulin mutation）",
-          clinical: "行為/語言改變；C9orf72：FTD-ALS 重疊；GRN augmentation phase III trial halted 2025 Oct",
-          treatment: "目前無 disease-modifying therapy；支持性治療、語言/行為復健；GRN augmentation 標靶策略 2024/11 全面失敗"
+          clinical: "行為/語言改變；C9orf72：FTD-ALS 重疊",
+          treatment: "目前無 disease-modifying therapy；支持性治療、語言/行為復健",
+          other: "GRN augmentation 標靶策略 2024/11 全面失敗（Robin 家族推動研究約 15–20 年；gene therapy + 重組蛋白補充均無效）；C9orf72 dipeptide repeat protein 毒性機轉確認（2025/02 研究：敲除 DPR start codon 細胞表型回復）；C9orf72 sense-ASO 標靶策略研究中"
         },
         {
           group: "ALS", answer: "ALS（Lou Gehrig's disease）",
@@ -518,7 +521,7 @@
           micro: "GCIs（Papp-Lantos bodies）in oligodendrocyte（silver stain 新月形）；神經元喪失 + gliosis",
           ihc: "α-synuclein IHC（GCI 在 oligodendrocyte；區別 PD 的 Lewy body 在 neuron）",
           clinical: "MSA-P（parkinsonism）+ MSA-C（ataxia）+ autonomic dysfunction；Sporadic",
-          treatment: "目前無 disease-modifying therapy；症狀治療為主：levodopa 可試但常反應有限；需處理 orthostatic hypotension 與 bladder dysfunction；無法阻止進展"
+          treatment: "目前無 disease-modifying therapy；症狀治療：levodopa 可試但反應有限（MSA-P）；orthostatic hypotension 管理（fludrocortisone / midodrine）；bladder dysfunction 需處理；無法阻止進展"
         },
         {
           group: "Prion", answer: "Prion Disease（CJD / FFI / Kuru）",
@@ -531,7 +534,8 @@
           micro: "Spongiform change（neurons & glia 空泡化）；Kuru plaque（小腦，PAS+/Congo red+）；幾乎無 inflammation；FFI 不表現 spongiform change（重要例外！）",
           ihc: "PrPSc IHC；PAS（Kuru plaque）；Congo red",
           clinical: "極罕見（1/1,000,000）；rapidly progressive dementia；數月內死亡；FFI：失眠/ataxia/自律神經障礙，不表現 spongiform change",
-          treatment: "上游策略：ZFP（抑制 PRNP 轉錄）；ASO（降解 PRNP mRNA）；Molecular gating（阻止 ER folding）；均在實驗階段；已發病→支持性照護"
+          treatment: "已發病 → 支持性照護；目前無核准治療",
+          other: "上游抑制策略（均在實驗階段）：ZFP（結合 PRNP promoter，抑制 gene transcription）；ASO（降解 PRNP mRNA）；Molecular gating（阻止 prion protein 進入 ER folding pathway）"
         }
       ]
     },
