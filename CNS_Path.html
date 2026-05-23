@@ -236,7 +236,7 @@
           cell: "Astrocyte",
           morphology: "胞體膨大；豐富 bright-pink eosinophilic 胞質；核偏位（eccentric）；stout ramifying process",
           reversible: "可進展為 reactive gliosis",
-          disease: "急性損傷期常見"
+          disease: "急性損傷期常見；⚠️ 不只見於 reactive gliosis，也可見於 pilocytic astrocytoma 等腫瘤（reactive vs neoplastic 鑑別考點）"
         },
         {
           group: "Astrocyte", answer: "Alzheimer type II astrocyte",
@@ -286,6 +286,20 @@
           morphology: "腦室壁表面變粗糙顆粒狀；subependymal gliosis 造成",
           reversible: "—",
           disease: "Hydrocephalus、neurosyphilis（梅毒）、CMV / 慢性腦室炎"
+        },
+        {
+          group: "Neuron", answer: "Ghost cell",
+          cell: "Neuron",
+          morphology: "晚期：只剩細胞輪廓（outline preserved），核完全消失",
+          reversible: "不可逆——神經元死亡終末形態",
+          disease: "缺氧/缺血性損傷終末期；Red neuron 後期進展"
+        },
+        {
+          group: "Microglia", answer: "Microglial nodule",
+          cell: "Microglia",
+          morphology: "Microglia 增生聚集，中間是已崩解的 necrotic debris（非仍可辨認形態的 dying neuron）；核拉長呈 rod cells",
+          reversible: "—",
+          disease: "鑑別 neuronophagia：neuronophagia 中間是仍可辨認形態的 dying neuron；microglial nodule 中間是 necrotic debris"
         }
       ]
     },
@@ -326,15 +340,15 @@
           epidemiology: "慢性酒精中毒、低血鈉患者",
           clinical: "Pseudobulbar palsy；四肢無力；locked-in syndrome",
           gross: "對稱性 pons demyelination",
-          micro: "Inflammation absent；neurons and axons well preserved；oligodendrocyte 受損為主",
-          differentiator: "Inflammation absent（vs MS/NMO）；neurons/axons preserved；osmolality history",
+          micro: "Inflammation absent；neurons and axons well preserved；oligodendrocyte 受損為主；急性進程：矯正後 2–6 天內 myelin 損傷（OL 對滲透壓應激特別敏感）",
+          differentiator: "Inflammation absent（vs MS/NMO）；neurons/axons preserved；osmolality history；急性進程 2–6 天",
           treatment: "預防：Na⁺ 矯正≤10–12 mEq/L/day；已發生→支持性照護"
         },
         {
           group: "NMO", answer: "Neuromyelitis Optica（NMO）",
           mechanism: "AQP4-IgG 攻擊 astrocyte 上 AQP4 → primary inflammatory astrocytopathy with secondary demyelination",
           trigger: "AQP4-IgG 自體免疫；女性偏多（>MS）",
-          epidemiology: "女性為主；初次發作預後差；AQP4-IgG 陽性",
+          epidemiology: "F:M 約 9:1（比 MS 的 2:1 更懸殊）；初次發作預後差；AQP4-IgG 陽性",
           clinical: "Bilateral optic neuritis + spinal cord demyelination；病灶在視神經+脊髓中央（非 periventricular）",
           gross: "視神經 + 脊髓中央病灶；necrosis",
           micro: "Necrosis；neutrophils / eosinophils 浸潤；血管壁 Ig / complement deposition；AQP4 expression 消失",
@@ -392,6 +406,16 @@
           trigger: "X-linked 遺傳；PLP1 基因突變",
           micro: "Hypomyelination（非 demyelination）；可伴 cerebellar neuronal loss → ataxia",
           differentiator: "X-linked；hypomyelination（先天不足，非後天喪失）；PLP1"
+        },
+        {
+          group: "Leukodystrophy", answer: "Periventricular Leukomalacia（PVL）",
+          mechanism: "早產兒（<28 週）缺氧缺血 → premature OPC 凋亡 / 無法成熟為 oligodendrocyte → 白質損傷",
+          trigger: "早產兒缺氧缺血；非遺傳性酶缺乏",
+          epidemiology: "早產兒；<28 週高風險",
+          gross: "腦室周圍白質壞死；白質軟化灶",
+          micro: "White matter necrosis；OPC 死亡；少量炎症反應；hypomyelination（OPC 死亡無法 myelinate）",
+          differentiator: "非遺傳性；早產兒；缺氧缺血機轉；腦性麻痺重要病因；hypomyelination（非 genetic enzyme defect）",
+          treatment: "支持性照護；復健；腦性麻痺管理"
         }
       ]
     },
@@ -412,7 +436,9 @@
         { key: "gross", label: "Gross 病理" },
         { key: "micro", label: "Micro 病理" },
         { key: "ihc", label: "IHC / Stain" },
-        { key: "clinical", label: "臨床表現" }
+        { key: "clinical", label: "臨床表現" },
+        { key: "treatment", label: "治療" },
+        { key: "risk_factor", label: "風險因子 / 環境" }
       ],
       rows: [
         {
@@ -425,7 +451,9 @@
           gross: "皮質萎縮（額頂顳）；widened sulci；hydrocephalus ex vacuo；occipital sparing",
           micro: "Neuritic plaques（amyloid core + dystrophic neurites）；NFT（過磷酸化 tau，silver stain）；CAA（Congo red+）；Hirano bodies（CA1）",
           ihc: "Aβ-IHC；phospho-tau IHC；Congo red（CAA）",
-          clinical: "隱匿發病：記憶喪失→失智；onset to death 5–10 years；prodromal fMRI：hippocampus/neocortex hyperactivity"
+          clinical: "隱匿發病：記憶喪失→失智；onset to death 5–10 years；prodromal fMRI：hippocampus/neocortex hyperactivity",
+          treatment: "症狀：cholinesterase inhibitors；中晚期 + memantine（減少 excitotoxicity）；Disease-modifying：anti-Aβ antibody（lecanemab，ARIA 副作用）；實驗性：CART-A（astrocyte phagocytose plaques）、CART-M、CART-O",
+          risk_factor: "睡眠不足（Aβ 清除↓）；缺乏運動；頭部外傷史；心血管疾病；APOE ε4（sporadic 最重要）；Down syndrome（trisomy 21，APP dosage↑，20–30 歲發病）"
         },
         {
           group: "FTLD-tau", answer: "FTLD-tau（Pick / PSP / CBD）",
@@ -437,7 +465,8 @@
           gross: "Knife-edge gyri（刀刃狀萎縮）；PSP/CBD：caudate 萎縮",
           micro: "Pick bodies（圓形，eosinophilic，argyrophilic，3R tau+）；PSP/CBD：4R tau tufted astrocytes",
           ihc: "Tau IHC（3R 或 4R 特異性抗體）；silver stain",
-          clinical: "人格行為改變（額葉）或語言障礙（顳葉）；<65 歲；PSP/CBD 另有 parkinsonism"
+          clinical: "人格行為改變（額葉）或語言障礙（顳葉）；<65 歲；PSP/CBD 另有 parkinsonism",
+          treatment: "目前無 disease-modifying therapy；支持性 + 症狀控制；PSP/CBD levodopa 反應有限"
         },
         {
           group: "FTLD-TDP", answer: "FTLD-TDP",
@@ -448,7 +477,8 @@
           spread: "額顳葉為主；C9orf72：FTD / ALS / 混合；TDP-43 prion-like 擴散",
           micro: "TDP-43 cytoplasmic inclusions（nuclear↓）；GRN：needle-like intranuclear；C9orf72：dipeptide inclusion",
           ihc: "TDP-43 IHC（cytoplasmic↑, nuclear↓）；FUS IHC",
-          clinical: "行為/語言改變；C9orf72：FTD-ALS 重疊；GRN augmentation phase III trial halted 2025 Oct"
+          clinical: "行為/語言改變；C9orf72：FTD-ALS 重疊；GRN augmentation phase III trial halted 2025 Oct",
+          treatment: "支持性治療為主；GRN augmentation phase III 2025 Oct 失敗；C9orf72 sense-ASO 臨床試驗中"
         },
         {
           group: "ALS", answer: "ALS（Lou Gehrig's disease）",
@@ -460,7 +490,8 @@
           gross: "前脊髓萎縮；lateral column 變薄（LFB 不上色 = corticospinal tract 退化）；anterior root 細",
           micro: "前角神經元喪失 + Betz cell 喪失；TDP-43 inclusions（97%）；Bunina bodies；astrogliosis / microgliosis",
           ihc: "TDP-43；ubiquitin；cystatin C（Bunina bodies）",
-          clinical: "UMN + LMN 同時受損；感覺/認知通常正常（重要鑑別）；LFB 可示 corticospinal tract 退化"
+          clinical: "UMN + LMN 同時受損；感覺/認知通常正常（重要鑑別）；LFB 可示 corticospinal tract 退化",
+          treatment: "Riluzole（阻斷 glutamate 毒性）；edaravone（ROS scavenger）；呼吸支持（BiPAP / 氣切）；吞嚥/營養照護（PEG）；復健；均無法阻止進展"
         },
         {
           group: "PD", answer: "Parkinson's Disease（PD）",
@@ -472,7 +503,9 @@
           gross: "SNpc 色素消失（neuromelanin↓）；locus ceruleus 亦同",
           micro: "Lewy body（eosinophilic，dense core + pale halo）；dopaminergic neuron 喪失（SNpc）；Lewy neurite",
           ihc: "α-synuclein IHC（cytoplasmic，round；區別 MSA GCI in oligodendrocyte）",
-          clinical: "TRAP；10–15% 後期發展為 dementia with Lewy bodies（DLB）；DBS + levodopa 無法阻止進展"
+          clinical: "TRAP：resting Tremor（pill-rolling tremor，如「包藥」動作）、Rigidity（cogwheel）、bradykinesia、Postural instability；Masked face（面部表情減少，撲克牌臉）；Festinating gait（步伐越來越小快，有時突然 freezing）；10–15% 後期 dementia with Lewy bodies（DLB）",
+          treatment: "Levodopa/carbidopa；dopamine agonist；MAO-B inhibitor；DBS（改善運動症狀）；DBS + levodopa 均無法阻止疾病進展",
+          risk_factor: "咖啡因（A2A 拮抗，最充分 PD 保護因子）；尼古丁（paradoxically protective，nAChR）；農藥（MPTP 直接殺 dopaminergic neuron）；腸道菌相（gut-brain axis，α-syn 可能從腸道逆行至腦）；GBA1（lysosome，風險因子）"
         },
         {
           group: "MSA", answer: "Multiple System Atrophy（MSA）",
@@ -484,7 +517,8 @@
           gross: "三系統萎縮（putamen / SNpc / cerebellum / olive）",
           micro: "GCIs（Papp-Lantos bodies）in oligodendrocyte（silver stain 新月形）；神經元喪失 + gliosis",
           ihc: "α-synuclein IHC（GCI 在 oligodendrocyte；區別 PD 的 Lewy body 在 neuron）",
-          clinical: "MSA-P（parkinsonism）+ MSA-C（ataxia）+ autonomic dysfunction；Sporadic"
+          clinical: "MSA-P（parkinsonism）+ MSA-C（ataxia）+ autonomic dysfunction；Sporadic",
+          treatment: "支持性；Levodopa 部分有效（MSA-P，但效果不如 PD）；orthostatic hypotension 管理（fludrocortisone / midodrine）；無法阻止進展"
         },
         {
           group: "Prion", answer: "Prion Disease（CJD / FFI / Kuru）",
@@ -496,7 +530,8 @@
           gross: "Spongiform encephalopathy；gyrus atrophy；空洞乾淨（vs stroke 有血塊，abscess 有膿）",
           micro: "Spongiform change（neurons & glia 空泡化）；Kuru plaque（小腦，PAS+/Congo red+）；幾乎無 inflammation；FFI 不表現 spongiform change（重要例外！）",
           ihc: "PrPSc IHC；PAS（Kuru plaque）；Congo red",
-          clinical: "極罕見（1/1,000,000）；rapidly progressive dementia；數月內死亡；FFI：失眠/ataxia/自律神經障礙，不表現 spongiform change"
+          clinical: "極罕見（1/1,000,000）；rapidly progressive dementia；數月內死亡；FFI：失眠/ataxia/自律神經障礙，不表現 spongiform change",
+          treatment: "上游策略：ZFP（抑制 PRNP 轉錄）；ASO（降解 PRNP mRNA）；Molecular gating（阻止 ER folding）；均在實驗階段；已發病→支持性照護"
         }
       ]
     },
@@ -555,8 +590,8 @@
           location: "Periventricular subependymal region（CMV receptor 高表現）+ neocortex gray matter",
           gross: "Periventricular lesion",
           micro: "Owl's eye inclusion（intranuclear + intracytoplasmic）",
-          special_feature: "Owl's eye；先天感染→microcephaly + periventricular calcification；IHC 確認",
-          clinical: "Immunocompromised / infant；先天感染→sensorineural hearing loss"
+          special_feature: "Owl's eye；先天感染雙重傷害：① 直接 infect glia/neuron → necrosis；② viral angitis + placental inflammation → hypoxia → secondary death；IHC 確認",
+          clinical: "Immunocompromised / infant；先天感染→sensorineural hearing loss（最主要後遺症）；可致 lissencephaly / schizencephaly / polymicrogyria；超音波偵測先天 malformation detection rate 僅 15%"
         },
         {
           group: "Viral", answer: "Rabies Encephalitis",
@@ -575,6 +610,36 @@
           micro: "LFB patchy demyelination；oligodendrocyte enlarged nucleus + glassy viral inclusion；atypical astrocytes",
           special_feature: "Oligodendrocyte enlarged nucleus + glassy inclusion；只在 immunocompromised 發病",
           clinical: "AIDS / immunocompromised；progressive multifocal demyelinating pattern"
+        },
+        {
+          group: "Viral", answer: "Arthropod-borne Encephalitis（Japanese B / West Nile）",
+          pathogen_type: "Flavivirus；Japanese B（遠東）/ West Nile（西半球北美）；Mosquito-borne",
+          entry_route: "Hematogenous via mosquito bite；地方性夏季流行",
+          location: "Diffuse（無特定偏好腦區）",
+          gross: "無特異性 gross 病變",
+          micro: "Lymphocytic meningoencephalitis；perivascular cuffing（lymphocyte 圍繞血管）；neuronophagia + microglial nodules",
+          special_feature: "Perivascular cuffing + neuronophagia + microglial nodules；夏季流行；遠東 = Japanese B；西半球 = West Nile；典型 viral encephalitis 三聯徵",
+          clinical: "Seizure、confusion、delirium、stupor；focal neurological signs；地方性流行病"
+        },
+        {
+          group: "Viral", answer: "Poliomyelitis（Polio）",
+          pathogen_type: "Poliovirus（enterovirus）",
+          entry_route: "Fecal-oral → hematogenous → retrograde axonal transport via PNS；CD155（poliovirus receptor）",
+          location: "Anterior horn of spinal cord（LMN 選擇性）",
+          gross: "脊髓前角萎縮",
+          micro: "Anterior horn motor neuron 喪失；inflammatory infiltrate；neuronophagia",
+          special_feature: "前角 LMN 選擇性破壞 → flaccid paralysis；CD155 receptor；vs ALS（上+下 MN 同時受損）",
+          clinical: "Flaccid paralysis（下肢為主）；無感覺障礙；post-polio syndrome 數十年後"
+        },
+        {
+          group: "Bacterial", answer: "Brain Abscess",
+          pathogen_type: "Streptococci / Staphylococci（non-immunosuppressed）；混合菌種（依感染源決定）",
+          entry_route: "Direct extension（sinusitis → basal temporal lobe）；Hematogenous（bacterial endocarditis）；Congenital heart disease（R→L shunt）；Chronic pulmonary sepsis（bronchiectasis）",
+          location: "Temporal lobe（sinusitis 延伸好發）；多發（endocarditis / CHD）",
+          gross: "Central liquefactive necrosis + granulation tissue rim + collagenous capsule；周圍 reactive gliosis",
+          micro: "Liquefactive necrosis + neutrophils + granulation tissue + collagenous capsule；周圍 reactive gliosis + gemistocytic astrocyte",
+          special_feature: "Ring-enhancing lesion（CT/MRI）；需與 Toxoplasmosis / lymphoma / GBM 鑑別；有明確感染灶病史",
+          clinical: "Fever + headache + focal deficits；感染源病史（ENT、牙科、心臟病）"
         },
         {
           group: "Fungal", answer: "Cryptococcal Meningitis",
@@ -643,6 +708,15 @@
           clinical: "Hypertension history；putamen 最常見"
         },
         {
+          group: "Ischemia", answer: "Border Zone（Watershed）Infarct",
+          type_mechanism: "全身灌流不足（低血壓 / 心臟停止）→ ACA-MCA 或 MCA-PCA 交界區缺血",
+          location: "ACA–MCA junction + MCA–PCA junction；雙側對稱；呈鐮刀狀（sickle-shaped band）",
+          gross_time: "雙側對稱性鐮刀狀梗塞；與純 MCA 梗塞分布不同",
+          micro: "同 pale infarct：liquefactive necrosis → gliosis",
+          complication: "上肢近端無力（man-in-a-barrel syndrome）；視覺缺損",
+          clinical: "低血壓 / 心臟停止病史；雙側對稱分布（鑑別 MCA 梗塞）"
+        },
+        {
           group: "Hemorrhage", answer: "Hypertensive Cerebral Hemorrhage",
           type_mechanism: "Hypertension → lipohyalinosis / fibrinoid necrosis of small vessels → rupture",
           location: "Basal ganglia / thalamus 65%；pons 15%；cerebellum 10%；cortex 10%",
@@ -654,9 +728,27 @@
           group: "Hemorrhage", answer: "Berry Aneurysm（SAH）",
           type_mechanism: "Congenital vessel wall defect（Circle of Willis 分支處）→ rupture → subarachnoid hemorrhage",
           location: "Anterior communicating a. 40%；MCA 34%；posterior communicating a. 20%；basilar 4%",
-          gross_time: "Diffuse subarachnoid hemorrhage；vessel wall 僅剩 hyalinized fibrous tissue，無肌肉層",
+          gross_time: "Diffuse subarachnoid hemorrhage；vessel wall 僅剩 hyalinized fibrous tissue，無肌肉層（缺 smooth muscle + internal elastic lamina）",
           complication: "Vasospasm；rebleeding；hydrocephalus；急症不能等 rupture",
           clinical: "突發 thunderclap headache；年輕人；acute emergency"
+        },
+        {
+          group: "Hemorrhage", answer: "Cerebral Amyloid Angiopathy（CAA）",
+          type_mechanism: "Aβ 沉積於中小型腦血管壁 → 管壁脆化 → lobar hemorrhage；與 AD 常共存",
+          location: "Lobar（皮質 / 皮質下）；occipital + parietal lobe 為主；non-hypertensive lobar bleeding",
+          gross_time: "Lobar hemorrhage（皮質出血）；多發性 microbleeds",
+          micro: "血管壁 Congo red 陽性（Aβ 沉積）；管壁增厚、纖維化",
+          complication: "反覆 lobar hemorrhage；SVD（small vessel disease）為失智獨立危險因子；anti-Aβ 治療（lecanemab）ARIA 副作用",
+          clinical: "老年患者；反覆 lobar hemorrhage；與 AD 相關；anti-amyloid therapy ARIA 副作用機轉"
+        },
+        {
+          group: "Hemorrhage", answer: "AVM（Arteriovenous Malformation）",
+          type_mechanism: "動靜脈直接相接（無 capillary bed）→ arteriovenous shunting → 血管破裂出血",
+          location: "任何腦區；幕上（cerebral hemispheres）多；wormlike vascular channels",
+          gross_time: "Wormlike tangled vascular channels；出血時呈血腫",
+          micro: "Tangled abnormal vessels；無正常 capillary bed；管壁增厚",
+          complication: "出血、seizure、focal deficits；5種類型：AVM / Cavernous hemangioma / Capillary hemangioma / Telangiectasia / Venous angioma",
+          clinical: "年輕人；intracranial hemorrhage 或 seizure 表現"
         },
         {
           group: "Trauma", answer: "Epidural Hematoma",
@@ -684,6 +776,15 @@
           clinical: "Angular acceleration history；LOC >6hr；CT 初期陰性"
         },
         {
+          group: "Trauma", answer: "CTE（Chronic Traumatic Encephalopathy）",
+          type_mechanism: "反覆輕微腦外傷 → 累積性 tau deposition（NFT in neurons + astrocytes）",
+          location: "皮質（sulcal depth perivascular）；limbic regions；basal ganglia",
+          gross_time: "腦萎縮；sulcal depth perivascular 棕色 tau 沉積",
+          micro: "Tau-positive NFTs in neurons + astrocytes（sulcal depth perivascular，特徵性分布）；TDP-43 inclusions 亦可見",
+          complication: "Memory / attention impairment；mood disturbance；progressive dementia",
+          clinical: "常見於越戰軍人、美式足球員、拳擊手（dementia pugilistica）；反覆外傷史；晚期失智"
+        },
+        {
           group: "Herniation", answer: "Transtentorial（Uncinate）Herniation",
           type_mechanism: "Supratentorial mass → medial temporal lobe 經 tentorium 向下疝出",
           location: "Tentorium cerebelli；uncus 壓迫 CN3 + posterior cerebral a.",
@@ -697,6 +798,14 @@
           location: "Foramen magnum",
           complication: "小腦 tonsil 壓迫 medulla → 呼吸心跳驟停（life threatening）",
           clinical: "最危急 herniation；medulla 受壓→猝死；life threatening"
+        },
+        {
+          group: "Herniation", answer: "Subfalcine（Cingulate）Herniation",
+          type_mechanism: "Unilateral supratentorial mass → cingulate gyrus 擠過 falx cerebri 向對側移位",
+          location: "Falx cerebri；cingulate gyrus",
+          gross_time: "Midline shift；cingulate gyrus 壓過 falx；最常見的 herniation 類型",
+          complication: "壓迫 anterior cerebral artery → ACA 梗塞→ 對側下肢無力",
+          clinical: "最常見 herniation；ACA 分布區缺血（對側下肢無力）；與 transtentorial herniation 可同時存在"
         }
       ]
     },
@@ -707,7 +816,7 @@
       defaultGroup: "全部混合",
       defaultField: "type_grading",
       mixedLimit: 20,
-      groupOptions: ["全部混合","成人型瀰漫性膠瘤","侷限性膠瘤","室管膜腫瘤","脈絡叢腫瘤","神經元 / 膠神經元腫瘤","胚胎性腫瘤","腦膜腫瘤","血液淋巴腫瘤","轉移性腫瘤"],
+      groupOptions: ["全部混合","成人型瀰漫性膠瘤","小兒型瀰漫性膠瘤","侷限性膠瘤","室管膜腫瘤","脈絡叢腫瘤","神經元 / 膠神經元腫瘤","胚胎性腫瘤","腦膜腫瘤","血液淋巴腫瘤","轉移性腫瘤"],
       fieldOptions: [
         { key: "type_grading", label: "tumor type / grading" },
         { key: "age", label: "age" },
@@ -724,21 +833,132 @@
       rows: [
         { group:"成人型瀰漫性膠瘤", answer:"Astrocytoma, IDH-mutant", type_grading:"Adult-type diffuse glioma；CNS WHO grade 2-4", age:"Adults around 30+ to 40+", criteria:"IDH-mutant；ATRX loss/mutation + TP53 mutation + absence of 1p/19q codeletion", grading_criteria:"AMEN：only A = grade 2；A + M = grade 3；E / N / CDKN2A/B homozygous deletion = grade 4", clinical:"Seizures，headaches，focal neurological deficits", location:"Predominantly cerebral hemispheres", imaging:"MRI non-enhancing，T1 hypointense / T2 hyperintense", molecular:"IDH1/IDH2 mutation + TP53 + ATRX；CDKN2A/B hom del → grade 4", histology:"Diffuse infiltration；nuclear atypia；gemistocytes（abundant eosinophilic cytoplasm, eccentric nuclei）", ihc_test:"IDH1 R132H IHC positive；CDKN2A/B by FISH", prognosis:"OS about 5 to 15 years" },
         { group:"成人型瀰漫性膠瘤", answer:"Oligodendroglioma, IDH-mutant and 1p/19q-codeleted", type_grading:"Adult-type diffuse glioma；CNS WHO grade 2 or 3", age:"Adults around 30+ to 40+", criteria:"IDH mutation + 1p/19q codeletion（缺一不可）", grading_criteria:"WHO grade 3：>=2.5 mitoses/mm²；often with microvascular proliferation", clinical:"Several years of neurological complaints, often seizures", location:"White matter of cerebral hemispheres", molecular:"IDH mutation + 1p/19q codeletion；TERT promoter common", histology:"Round nuclei, fried egg perinuclear halo, chicken-wire capillaries, calcification, microcysts", ihc_test:"FISH for 1p/19q；IDH1 R132H IHC", prognosis:"OS about 10 to 20 years" },
-        { group:"成人型瀰漫性膠瘤", answer:"Glioblastoma, IDH-wildtype", type_grading:"Adult-type diffuse glioma；CNS WHO grade 4", age:"Usually older adults；peak 55-85 years", criteria:"IDH-wt astrocytic glioma with MVP, necrosis, TERT mutation, EGFR amp, or +7/−10", grading_criteria:"Grade 4；necrosis or microvascular proliferation；or TERT / EGFR / +7/−10 alone suffices", location:"Most commonly supratentorial；subcortical white matter", imaging:"MRI ring-enhancing mass", molecular:"IDH-wildtype；TERT promoter mutation；EGFR amplification；+7/−10", histology:"Pseudopalisading necrosis, glomeruloid microvascular proliferation, nuclear atypia, frequent mitoses", ihc_test:"Molecular criteria（TERT, EGFR, +7/−10）can upgrade lower-grade morphology", prognosis:"Poorest prognosis；OS 6 months to 2 years" },
-        { group:"侷限性膠瘤", answer:"Pilocytic astrocytoma", type_grading:"Circumscribed glioma；CNS WHO grade 1", age:"Most common CNS neoplasm of childhood；peak age 8-13 years", criteria:"More discrete border vs diffuse gliomas；unique biphasic histology", grading_criteria:"Directly listed as CNS WHO grade 1", clinical:"Often treated by resection alone", location:"Most common cerebellum；also optic nerves, third ventricle, hypothalamus, spinal cord", imaging:"MRI：cystic tumor with enhancing mural nodule in cerebellum", molecular:"KIAA1549::BRAF fusion most common；BRAF V600E also possible", histology:"Biphasic：loose microcystic + compact fibrillary；piloid cells；Rosenthal fibers；EGBs", ihc_test:"KIAA1549::BRAF fusion or BRAF V600E on molecular workup", prognosis:"Total resection：10-year survival ~100%" },
+        { group:"成人型瀰漫性膠瘤", answer:"Glioblastoma, IDH-wildtype", type_grading:"Adult-type diffuse glioma；CNS WHO grade 4", age:"Usually older adults；peak 55-85 years", criteria:"IDH-wt astrocytic glioma with MVP, necrosis, TERT mutation, EGFR amp, or +7/−10", grading_criteria:"Grade 4；necrosis or microvascular proliferation；or TERT / EGFR / +7/−10 alone suffices", location:"Most commonly supratentorial；subcortical white matter", imaging:"MRI ring-enhancing mass", molecular:"IDH-wildtype；TERT promoter mutation；EGFR amplification；+7/−10", histology:"Pseudopalisading necrosis（壞死邊緣 tumor cell 排成柵欄狀）；geographic necrosis（地圖狀壞死）；glomeruloid microvascular proliferation；nuclear atypia；frequent mitoses", ihc_test:"Molecular criteria（TERT, EGFR, +7/−10）can upgrade lower-grade morphology", prognosis:"Poorest prognosis；OS 6 months to 2 years" },
+        { group:"小兒型瀰漫性膠瘤", answer:"Diffuse Midline Glioma（DMG），H3 K27-altered", type_grading:"Pediatric-type diffuse glioma；CNS WHO grade 4", age:"兒童（成人亦可）；DIPG（diffuse intrinsic pontine glioma）最典型", criteria:"H3K27me3 loss（IHC 診斷關鍵）+ midline location；無論組織學表現", grading_criteria:"All grade 4（regardless of histology）", clinical:"腦幹症狀（CN palsy、複視、吞嚥困難）；不做 biopsy 靠 MRI + H3K27M IHC 診斷；放療有限；中位存活 <2 年", location:"Midline：brainstem / pons（DIPG 最典型）、thalamus、hypothalamus、corpus callosum、spinal cord", imaging:"MRI infiltrative midline mass；T2 hyperintense；通常不 enhance", molecular:"H3.1/H3.2 K27M-mutant；H3.3 K27M-mutant；EZHIP-overexpressed；EGFR-mutant；H3K27me3 loss by IHC", histology:"Diffuse infiltration；variable histology（形態不重要）；H3K27me3 loss by IHC 是診斷關鍵", ihc_test:"H3K27me3 loss by IHC；H3K27M mutation（H3.1/H3.3 subtype）", prognosis:"最差；median OS < 2 years；目前無有效治療" },
+        { group:"侷限性膠瘤", answer:"Pilocytic astrocytoma", type_grading:"Circumscribed glioma；CNS WHO grade 1", age:"Most common CNS neoplasm of childhood；peak age 8-13 years", criteria:"More discrete border vs diffuse gliomas；unique biphasic histology", grading_criteria:"Directly listed as CNS WHO grade 1", clinical:"Often treated by resection alone", location:"Most common cerebellum；also optic nerves, third ventricle, hypothalamus, spinal cord", imaging:"MRI：cystic tumor with enhancing mural nodule in cerebellum", molecular:"KIAA1549::BRAF fusion most common；BRAF V600E also possible", histology:"Biphasic：loose microcystic + compact fibrillary；piloid cells；Rosenthal fibers；EGBs（eosinophilic granular bodies）", ihc_test:"KIAA1549::BRAF fusion or BRAF V600E on molecular workup", prognosis:"Total resection：10-year survival ~100%" },
+        { group:"侷限性膠瘤", answer:"Pleomorphic Xanthoastrocytoma（PXA）", type_grading:"Circumscribed glioma；WHO grade 2（anaplastic PXA = grade 3）", age:"年輕人（<30 y）", criteria:"Pleomorphic large cells + intracellular lipid vacuoles + reticulin-rich stroma；表面（superficial）病灶", grading_criteria:"Grade 3（Anaplastic PXA）：≥5 mitoses/10 HPF；CDKN2A/B deletion 亦可升級", clinical:"長期癲癇（temporal lobe）；BRAF V600E 可用 targeted therapy（vemurafenib）", location:"表面（superficial）；temporal lobe 最常見；leptomeningeal attachment", imaging:"Cystic with mural nodule；leptomeningeal contact", molecular:"BRAF V600E（~65%，最常見）；CDKN2A/B deletion（grade 3 marker）", histology:"Pleomorphic cells（多形性）+ lipid vacuoles（脂肪空泡）+ reticulin-rich stroma + eosinophilic granular bodies；leptomeningeal attachment；CD34+", ihc_test:"BRAF V600E IHC；CD34 positive；CDKN2A/B deletion by FISH（grade 3）", prognosis:"Grade 2 total resection 好；grade 3 差；BRAF V600E 可靶向治療" },
         { group:"室管膜腫瘤", answer:"Ependymoma", type_grading:"Ependymal tumor；most grade 2, grade 3 variants exist", age:"Children near 4th ventricle；adults in spinal cord", criteria:"Tumor near ependyma-lined ventricular system；location + molecular subtype determine classification", grading_criteria:"Grade 3：increased cellularity, mitoses, necrosis, microvascular proliferation", location:"Ventricular system and spinal cord", imaging:"Gross can fill 4th ventricle", molecular:"ZFTA fusion（ST）；EZHIP/H3K28M（PF-A, poor）；NF2（SP）；MYCN（SP, poor）", histology:"Perivascular pseudorosette（最重要）；ependymal rosette；round/oval nuclei；fibrillary background", ihc_test:"Subtype classification by location + molecular, not single IHC", prognosis:"PFA poor；resection extent and molecular subtype > grade" },
+        { group:"室管膜腫瘤", answer:"Myxopapillary Ependymoma", type_grading:"Ependymal tumor；WHO grade 2", age:"成人", criteria:"幾乎 exclusively 在 spinal cord cauda equina / filum terminale", grading_criteria:"Grade 2", clinical:"Cauda equina 症狀（下背痛、下肢放射痛、馬尾症狀）；手術切除預後良好", location:"Spinal cord cauda equina / filum terminale（幾乎 exclusively）", imaging:"Intradural extramedullary mass at cauda equina", molecular:"—", histology:"Perivascular pseudorosette + myxoid mucin substance（Alcian blue 染藍，特徵！）；乳突狀結構", ihc_test:"Alcian blue（myxoid matrix）；GFAP+", prognosis:"Grade 2；total resection 預後良好" },
+        { group:"室管膜腫瘤", answer:"Subependymoma", type_grading:"Ependymal tumor；WHO grade 1", age:"成人（中老年）；常偶然發現", criteria:"Lateral ventricle intraventricular；periventricular or intraventricular；cluster distribution of nuclei", grading_criteria:"Grade 1", clinical:"常無症狀；偶造成 obstructive hydrocephalus；手術切除預後極好", location:"Lateral ventricle（最常見）；4th ventricle（成人）", molecular:"—", histology:"Cluster 分布的 nuclei（細胞核聚集成群，特徵！）；fibrillary background；無或少 mitosis", ihc_test:"GFAP+；低 Ki-67", prognosis:"Grade 1；total resection 幾乎治癒" },
         { group:"脈絡叢腫瘤", answer:"Choroid plexus tumors", type_grading:"Papillary neoplasms；papilloma grade 1 / atypical papilloma grade 2 / carcinoma grade 3", age:"Children：lateral ventricle；adults：4th ventricle", criteria:"Papillary intraventricular neoplasm from choroid plexus epithelium", grading_criteria:"Papilloma：low/absent mitosis；atypical：increased mitoses；carcinoma：>5 mitoses/10 HPF + density + pleomorphism + necrosis", location:"Lateral ventricle（children）；4th ventricle（adults）", histology:"Papillary architecture, single-layer epithelium over fibrovascular cores；carcinoma：sheets + blurring + necrosis" },
         { group:"神經元 / 膠神經元腫瘤", answer:"Ganglioglioma", type_grading:"Neuronal/glioneuronal tumor；WHO grade 1", age:"Usually age 30 years or less", criteria:"Mixture of mature neurons + glial cells in superficial lesion, often temporal lobe", grading_criteria:"WHO grade 1；mitotic figures rare", clinical:"Often presents with seizures；surgery helps seizure control", location:"Superficial, often temporal lobe", imaging:"MRI：temporal lobe cystic lesion with solid nodule", molecular:"BRAF p.V600E or other MAPK alterations", histology:"Mature neurons + low-grade glial cells；dysmorphic, sometimes binucleated ganglion cells；cystic component", prognosis:"Slow-growing；resection effective for seizure control" },
         { group:"神經元 / 膠神經元腫瘤", answer:"DNET（Dysembryoplastic neuroepithelial tumor）", type_grading:"Neuronal/glioneuronal tumor；WHO grade 1", age:"Children and young adults", criteria:"Cortical expanded lesion with mucin-rich nodules and floating neurons", grading_criteria:"WHO grade 1", clinical:"Early-onset focal epilepsy；favorable after resection", location:"Expanded gray matter；most common superficial temporal lobe", histology:"Mucin-rich nodules of oligodendrocyte-like cells with floating neurons in mucoid matrix；skip lesion", prognosis:"Favorable after resection" },
+        { group:"神經元 / 膠神經元腫瘤", answer:"Central Neurocytoma", type_grading:"Neuronal/glioneuronal tumor；WHO grade 2", age:"Young adult（20–40 y）", criteria:"Intraventricular（lateral ventricle / septum pellucidum）；small round bland cells + neuropil background", grading_criteria:"WHO grade 2；易 local 復發", clinical:"Obstructive hydrocephalus（lateral ventricle 阻塞）；surgery 為主治療", location:"Lateral ventricle / interventricular septum（特徵！）；septum pellucidum", imaging:"Intraventricular mass；MRI heterogeneous enhancement", molecular:"—", histology:"Small round bland cells（似 oligo，但 NeuN+）+ true rosette + neuropil background；isomorphic nuclei", ihc_test:"Synaptophysin + NeuN（神經元分化 marker）；NeuN+ 鑑別 oligo（NeuN−）", prognosis:"Grade 2；易局部復發；需 gross total resection" },
         { group:"胚胎性腫瘤", answer:"Medulloblastoma", type_grading:"Embryonal tumor；all subtypes CNS WHO grade 4", age:"Children and adults in their 20s", criteria:"Molecularly divided into WNT, SHH, Group 3, Group 4", grading_criteria:"All subtypes are grade 4", clinical:"Rapid growth→hydrocephalus；放療反應良好；整體 75% 存活率", location:"Cerebellum / 4th ventricle；can spread via CSF to spinal cord", imaging:"Gross：tumor filling 4th ventricle", molecular:"WNT-activated；SHH-activated（TP53-wt or TP53-mut）；Group 3（MYC amp）；Group 4（CDK6/NMYC amp）", histology:"Small blue round cells；Homer-Wright rosette；desmoplastic/nodular；large cell/anaplastic", prognosis:"Varies by subgroup；WNT best（5y OS 95%）；Group 3/4 poor（5y OS ~50%）" },
         { group:"腦膜腫瘤", answer:"Meningioma", type_grading:"Meningeal tumor；most common extra-axial CNS tumor；WHO grade 1-3", age:"Predominantly adults；F:M ~2-3:1；uncommon in children", criteria:"Arachnoid meningothelial tumor attached to dura；NF2 → multiple lesions", grading_criteria:"Grade 2：≥4 mitoses/10 HPF, brain invasion, or ≥3/5 atypical features；grade 3：≥20 mitoses, frank anaplasia, TERT mutation, or CDKN2A/B hom del", clinical:"Usually slow-growing；vague symptoms or focal deficits from mass effect", location:"Dural-based；parasagittal falx, convexity, sphenoid wing, posterior fossa", imaging:"Broad-based dural mass；MRI dural tail sign；solid globular circumscribed", molecular:"NF2 central（sporadic ~50-60%）；also SMO, AKT1, TRAF7, KLF4, POLR2A, BAP1, CDKN2A", histology:"Whorling pattern, psammoma bodies, transitional pattern, nuclear pseudoinclusions", ihc_test:"TERT promoter mutation or CDKN2A/B hom del → grade 3 upgrade", prognosis:"Total excision grade 1/2 does well；grade 3 poor" },
         { group:"血液淋巴腫瘤", answer:"Primary CNS Lymphoma", type_grading:"Hematolymphoid tumor；most common = diffuse large B-cell lymphoma（CD20+）", age:"Non-immunosuppressed：frequency increases after age 60", criteria:"Occurs first in CNS without systemic lymphoma evidence", clinical:"May involve eye；immunosuppressed：EBV-associated；non-immunosuppressed：PDL1 amp/overexpression", location:"Often multifocal；periventricular；basal ganglia + thalamus bilateral；eye may be involved", imaging:"MRI periventricular enhancing masses", molecular:"Immunosuppressed：EBV-associated；non-immunosuppressed：PDL1 amplification", histology:"Large atypical lymphoid cells with perivascular cuffing；subarachnoid spread", ihc_test:"CD20 IHC positive；Liu stain smear shows large atypical lymphoid cells" },
         { group:"轉移性腫瘤", answer:"Metastatic tumors to CNS", type_grading:"Secondary CNS tumors；no WHO grading", criteria:"Secondary CNS tumors derived from systemic primary sites", clinical:"Can be first sign of systemic cancer；solitary → local treatment；leptomeningeal carcinomatosis → hard to treat", location:"Gray-white matter junction throughout cerebral hemispheres and cerebellum", imaging:"MRI：multiple ring-enhancing lesions at gray-white junction；peri-focal edema" }
       ]
+    },
+
+    developmental: {
+      label: "CNS Developmental",
+      answerLabel: "疾病 / 畸形名稱",
+      defaultGroup: "全部混合",
+      defaultField: "mechanism",
+      mixedLimit: 18,
+      groupOptions: ["全部混合", "Neural Tube Defects", "Migration Defects", "Structural"],
+      fieldOptions: [
+        { key: "mechanism", label: "機轉 / 閉合失敗" },
+        { key: "gene", label: "相關基因" },
+        { key: "gross", label: "Gross 病理" },
+        { key: "micro", label: "Micro / 組織學" },
+        { key: "association", label: "相關疾病 / 誘因" },
+        { key: "clinical", label: "臨床表現" }
+      ],
+      rows: [
+        {
+          group: "Neural Tube Defects", answer: "Anencephaly",
+          mechanism: "頭端 neural tube 閉合失敗（胚胎第 3–4 週）→ 腦組織直接暴露；顱骨缺如",
+          gene: "多因素；葉酸缺乏為重要環境因子",
+          gross: "腦組織直接暴露（exposed / degenerated brain tissue）；顱骨缺如",
+          association: "葉酸缺乏；糖尿病母親；特定基因突變",
+          clinical: "嚴重致死型；胎兒存活時間極短；prenatal diagnosis by US + AFP↑"
+        },
+        {
+          group: "Neural Tube Defects", answer: "Encephalocele",
+          mechanism: "顱骨缺損（軸中胚層誘導失敗）→ CNS tissue（± CSF）疝出",
+          gene: "多因素；葉酸缺乏",
+          gross: "顱骨缺損處可見腦組織疝出囊袋；多見 occipital 或 cranial",
+          association: "葉酸缺乏；特定基因突變",
+          clinical: "依疝出大小決定神經功能損傷程度；occipital 最常見"
+        },
+        {
+          group: "Neural Tube Defects", answer: "Myelomeningocele",
+          mechanism: "脊柱閉合缺損（軸中胚層誘導失敗）→ spinal cord + meninges 同時疝出（最嚴重型）",
+          gene: "多因素；葉酸缺乏",
+          gross: "脊柱缺損處可見 spinal cord + meninges 疝出囊袋",
+          association: "常合併 Chiari II malformation；葉酸缺乏",
+          clinical: "下肢癱瘓 + 膀胱/腸道功能障礙；常合併 hydrocephalus；需手術修補"
+        },
+        {
+          group: "Migration Defects", answer: "Lissencephaly（平滑腦）",
+          mechanism: "Radial migration 失敗 → neurons 無法到達正確 cortical layer → 六層皮質無法形成；cortex 異常增厚（~3x 正常）",
+          gene: "LIS1（17p13.3）；DCX（Doublecortin，X-linked）——均與 microtubule-binding + radial migration 有關",
+          gross: "Smooth brain；gyri 過少或無（agyria）；sulci 非常 shallow；cortex 增厚（~3 倍）；white matter 相對變薄",
+          micro: "六層皮質被破壞，約只能分出 4 層或更少；cortex 增厚",
+          association: "LIS1 → 17p13.3 microdeletion；DCX → X-linked（男性較重，女性可為 subcortical band heterotopia）",
+          clinical: "嚴重智能障礙 + 癲癇；DCX（X-linked）女性帶因者可有 subcortical band heterotopia（double cortex）"
+        },
+        {
+          group: "Migration Defects", answer: "Neural Heterotopia（神經元異位）",
+          mechanism: "Neurons 遷移中途停住，停留在 white matter（正常 WM 只有 axon/myelin，不應有 neuron cell body）",
+          gene: "FLNA（Filamin-1，X-linked dominant；hemizygous male → 致死 → 臨床主要見女性）；ARX（X-linked）",
+          gross: "白質中出現灰白色小結節（nodular heterotopia）",
+          micro: "白質中出現正常神經元的灰質結節（periventricular 或 subcortical）",
+          association: "FLNA：X-linked dominant，男性致死 → 臨床只見女性；ARX：X-linked",
+          clinical: "癲癇（最常見表現）；智能正常至中度障礙；FLNA 女性患者"
+        },
+        {
+          group: "Migration Defects", answer: "Polymicrogyria（多小迴腦）",
+          mechanism: "Cortical 過度折疊 → 腦回過多但每個太小；可為遺傳或後天（CMV、局部缺血）因素",
+          gene: "NF1（Neurofibromatosis type 1）；Fukutin（Fukuyama CMD）；CMV intrauterine（最常見非遺傳因素）",
+          gross: "大量小而密的腦回；表面如「花椰菜」或「鋸齒狀」外觀",
+          micro: "六層層次相對保留，但排列扭曲；neuronal lamination 異常",
+          association: "CMV intrauterine（最常見之一）；Focal ischemia；NF1；Fukutin（Fukuyama CMD）",
+          clinical: "癲癇；語言障礙；智能障礙（依程度而異）"
+        },
+        {
+          group: "Structural", answer: "Holoprosencephaly",
+          mechanism: "Prosencephalon 分化失敗 → Telencephalon 無法分成左右葉；亦控制顏面發育 → 顏面畸形",
+          gene: "SHH；ZIC2；TGF-β 相關訊號路徑；Trisomy 13（70%）；Trisomy 18",
+          gross: "Alobar（最嚴重，single ventricle chamber，thalamus/BG/forebrain 全融合）→ Semi-alobar → Lobar（最輕）",
+          micro: "—",
+          association: "Trisomy 13（70% 合併 Holoprosencephaly）；Maternal diabetes（~1–2%）；SHH / ZIC2 突變",
+          clinical: "顏面畸形：Cyclopia（單眼眶）、Proboscis（鼻長眼上方）、cleft lip/palate；智能障礙；seizure"
+        },
+        {
+          group: "Structural", answer: "Agenesis of Corpus Callosum",
+          mechanism: "Layer 2 axon 無法跨越 midline → corpus callosum 無法形成",
+          gene: "多因素（多種基因 + 環境）",
+          gross: "Corpus callosum 消失（genu / splenium 不見）；lateral ventricle 呈「蝙蝠翅膀」外觀（colpocephaly）",
+          micro: "Probst bundles：失去方向的半球間連合 axon 沿同側縱向走",
+          association: "可單獨存在，或合併其他 CNS 異常；多種遺傳症候群（Aicardi 等）",
+          clinical: "輕者無症狀（偶然發現）；重者智能障礙 + 癲癇；視覺空間障礙"
+        },
+        {
+          group: "Structural", answer: "Dandy-Walker Malformation",
+          mechanism: "小腦蚓部發育不全（vermis hypoplasia）→ 第四腦室囊狀擴大 → 後顱窩增大",
+          gene: "多因素",
+          gross: "小腦 vermis hypoplasia + 第四腦室擴大（囊狀）；後顱窩擴大",
+          micro: "Vermis 缺如或發育不全",
+          association: "常合併 hydrocephalus；corpus callosum agenesis；其他腦異常",
+          clinical: "小腦失調；hydrocephalus（常需 VP shunt）；頭圍增大；小腦發育延續至出生後 1–1.5 歲"
+        },
+        {
+          group: "Structural", answer: "Chiari Malformation",
+          mechanism: "小腦扁桃體先天性疝入 foramen magnum",
+          gene: "多因素；Chiari II 常合併 myelomeningocele（脊柱閉合缺損）",
+          gross: "小腦扁桃體延伸至 foramen magnum 以下；Chiari II 合併 myelomeningocele",
+          micro: "—",
+          association: "Chiari I：單純小腦疝（可合併 syringomyelia）；Chiari II：合併 myelomeningocele；syringomyelia（脊髓空洞症）",
+          clinical: "後頸痛；咳嗽誘發頭痛；四肢感覺異常；syringomyelia 症狀（解離性感覺障礙：痛溫覺↓、觸覺保留）"
+        }
+      ]
     }
   };
 
-  const TOPIC_ORDER = ["cells","cell_response","demyelinating","neurodegen","infection","cerebrovascular","tumor"];
+  const TOPIC_ORDER = ["cells","cell_response","demyelinating","neurodegen","infection","cerebrovascular","tumor","developmental"];
 
   let currentTopicKey = "neurodegen";
   let currentGroup = "";
