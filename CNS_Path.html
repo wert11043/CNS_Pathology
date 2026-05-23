@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神經病理 配合題</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --correct: #16a34a;
+      --wrong: #dc2626;
+      --selected: #7c3aed;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --group: #0f766e;
+      --topic: #7c3aed;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1rem 1rem 3rem;
+    }
+    header { text-align: center; padding: 1.25rem 0 0.75rem; }
+    header h1 { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+    header p { font-size: .85rem; color: var(--muted); margin-top: .2rem; line-height: 1.45; }
+    .section-label {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--muted); font-weight: 700; text-align: center; margin: .5rem 0 .2rem;
+    }
+    .categories { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: .2rem 0; }
+    .cat-btn {
+      padding: .4rem .9rem; border: 2px solid var(--border); border-radius: 999px;
+      background: var(--card); cursor: pointer; font-size: .8rem; font-weight: 600;
+      color: var(--muted); transition: all .15s;
+    }
+    .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .cat-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .categories-topics .cat-btn.active { background: var(--topic); border-color: var(--topic); }
+    .categories-secondary .cat-btn.active { background: var(--group); border-color: var(--group); }
+    .toolbar { display: flex; justify-content: center; gap: .5rem; margin: .75rem 0; flex-wrap: wrap; }
+    .tool-btn {
+      padding: .4rem 1rem; border: 2px solid var(--border); border-radius: .5rem;
+      background: var(--card); cursor: pointer; font-size: .8rem; font-weight: 600;
+      color: var(--muted); transition: all .15s;
+    }
+    .tool-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .tool-btn.answer-btn { border-color: #d97706; color: #d97706; }
+    .tool-btn.answer-btn:hover { background: #fffbeb; }
+    .status { text-align: center; font-size: .82rem; color: var(--muted); margin-bottom: .75rem; }
+    .status b { color: var(--text); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; max-width: 1100px; margin: 0 auto; }
+    .col-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; text-align: center; margin-bottom: .3rem; }
+    .col { display: flex; flex-direction: column; gap: .45rem; }
+    .tile {
+      padding: .7rem .9rem; border: 2px solid var(--border); border-radius: .6rem;
+      background: var(--card); cursor: pointer; font-size: .82rem; line-height: 1.48;
+      transition: border-color .12s, background .12s, opacity .12s;
+      user-select: none; min-height: 2.9rem; text-align: left;
+    }
+    .tile:hover:not(.matched):not(.flashing) { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+    .tile.selected { border-color: var(--selected); background: #f5f3ff; }
+    .tile.matched { border-color: var(--correct); background: #f0fdf4; color: var(--correct); cursor: default; opacity: .75; }
+    .tile.flashing { border-color: var(--wrong); background: #fef2f2; animation: shake .35s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    .result { display: none; text-align: center; max-width: 420px; margin: 1.5rem auto 0; padding: 1.75rem 1.5rem; background: var(--card); border: 2px solid var(--border); border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(0,0,0,.07); }
+    .result.show { display: block; }
+    .result .big { font-size: 3.5rem; font-weight: 900; line-height: 1; }
+    .result .big.perfect { color: var(--correct); }
+    .result .big.good { color: #d97706; }
+    .result .big.bad { color: var(--wrong); }
+    .result p { color: var(--muted); margin: .6rem 0 1.25rem; font-size: .9rem; line-height: 1.55; }
+    .result button { padding: .65rem 1.5rem; background: var(--primary); color: #fff; border: none; border-radius: .6rem; cursor: pointer; font-size: .95rem; font-weight: 700; }
+    .result button:hover { background: #1d4ed8; }
+    #answerView { max-width: 1100px; margin: 0 auto; }
+    .answer-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .answer-table th { background: var(--primary); color: #fff; padding: .5rem .75rem; text-align: left; font-weight: 700; font-size: .75rem; letter-spacing: .04em; }
+    .answer-table th:first-child { border-radius: .5rem 0 0 0; }
+    .answer-table th:last-child  { border-radius: 0 .5rem 0 0; }
+    .answer-table td { padding: .58rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.48; background: var(--card); }
+    .answer-table tr:nth-child(even) td { background: #f8fafc; }
+    .answer-table tr:last-child td { border-bottom: none; }
+    .hidden { display: none !important; }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .tile { font-size: .79rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="pageTitle">神經病理 配合題</h1>
+    <p id="pageSubtitle">選主題 → 選群組 → 選欄位 → 左右配對</p>
+  </header>
+
+  <div class="section-label">主題</div>
+  <div class="categories categories-topics" id="topicChips"></div>
+  <div class="section-label">群組</div>
+  <div class="categories categories-secondary" id="groupChips"></div>
+  <div class="section-label">配對欄位</div>
+  <div class="categories" id="fieldChips"></div>
+
+  <div class="toolbar">
+    <button class="tool-btn" id="resetBtn">重新練習</button>
+    <button class="tool-btn answer-btn" id="toggleAnswerBtn">顯示答案</button>
+  </div>
+
+  <div class="status" id="statusBar">進度 <b id="progressText">0 / 0</b> &nbsp;｜&nbsp; 錯誤 <b id="errorText">0</b></div>
+
+  <div class="grid" id="quizView">
+    <div>
+      <div class="col-label" id="fieldHeaderLabel">線索 / 提示</div>
+      <div class="col" id="clueCol"></div>
+    </div>
+    <div>
+      <div class="col-label" id="answerColLabel">答案</div>
+      <div class="col" id="answerCol"></div>
+    </div>
+  </div>
+
+  <div class="result" id="resultCard">
+    <div class="big" id="resultScore">100%</div>
+    <p id="resultText"></p>
+    <button id="playAgainBtn">再試一次</button>
+  </div>
+
+  <div id="answerView" class="hidden">
+    <table class="answer-table" id="answerTable">
+      <thead><tr><th id="fieldHeader">線索</th><th id="answerTableHeader">答案</th></tr></thead>
+      <tbody id="answerBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+  const ALL_TOPICS = {
+    cells: {
+      label: "CNS Cells",
+      answerLabel: "細胞種類",
+      defaultGroup: "全部混合",
+      defaultField: "marker",
+      mixedLimit: 20,
+      groupOptions: ["全部混合"],
+      fieldOptions: [
+        { key: "origin", label: "起源" },
+        { key: "distribution", label: "分布位置" },
+        { key: "he_stain", label: "HE 染色外觀" },
+        { key: "marker", label: "特殊染色 / Marker" },
+        { key: "function", label: "功能" },
+        { key: "injury_response", label: "損傷反應" },
+        { key: "disease_relevance", label: "相關疾病" }
+      ],
+      rows: [
+        {
+          group: "全部混合", answer: "Astrocyte",
+          origin: "Neural tube（neuroectoderm）",
+          distribution: "全 CNS，尤 gray matter；blood vessel 旁（BBB）",
+          he_stain: "核橢圓形淡染，難辨認；看不到 star-like process；常見血管旁",
+          marker: "GFAP（IHC，染 ~15% process）",
+          function: "BBB 形成、K⁺ buffering、neurotransmitter reuptake、scaffolding",
+          injury_response: "Reactive gliosis / Gemistocytic astrocyte；A1（neurotoxic）/ A2（neuroprotective）",
+          disease_relevance: "MS、AD、ALS（EAAT2↓→excitotoxicity）、NMO（AQP4攻擊）"
+        },
+        {
+          group: "全部混合", answer: "Oligodendrocyte",
+          origin: "Neural tube；只在 jawless fish 以上（顎口類脊椎動物）中存在",
+          distribution: "CNS white matter；一個 oligo 包覆多條 axon",
+          he_stain: "Perinuclear halo（固定 artifact）；核圓；形似荷包蛋 / lymphocyte",
+          marker: "LFB（Luxol Fast Blue）染 myelin 藍色；MBP；MOG",
+          function: "CNS myelination；local trophic support（送物質給 axon）；OPC 終身可分化",
+          injury_response: "幾乎不反應；OPC 補充有限；CPM / ischemia 時受損（INa→excitotoxicity）",
+          disease_relevance: "MS（myelin 受損）、CPM（ODS）、MSA（GCI in oligo）"
+        },
+        {
+          group: "全部混合", answer: "Microglia",
+          origin: "Yolk sac mesoderm（唯一非 neural tube 來源）",
+          distribution: "全 CNS",
+          he_stain: "幾乎看不出來（ramified）；活化後 soma 增大",
+          marker: "CD11b / Iba-1；CD68",
+          function: "免疫監控、吞噬、synapse pruning；activation threshold 很低",
+          injury_response: "三模式：insulation of damage / inflammatory and tissue damage / homeostatic；→ gitter cells / rod cells / neuronophagia",
+          disease_relevance: "Viral encephalitis（neuronophagia, rod cells）、AD（DAM）、ALS（NOX↑）"
+        },
+        {
+          group: "全部混合", answer: "Ependymal cell",
+          origin: "Neural tube",
+          distribution: "腦室壁、脊髓中央管；特化為 choroid plexus",
+          he_stain: "Single-layered ciliated columnar；腦室壁排列整齊",
+          marker: "Vimentin",
+          function: "CSF 循環、選擇性屏障",
+          injury_response: "幾乎不反應（Neither OL nor ependymal cells respond significantly）；Granular ependymitis（hydrocephalus / neurosyphilis / CMV）",
+          disease_relevance: "CMV（periventricular）、hydrocephalus"
+        }
+      ]
+    },
+
+    cell_response: {
+      label: "Cellular Response",
+      answerLabel: "反應名稱",
+      defaultGroup: "全部混合",
+      defaultField: "morphology",
+      mixedLimit: 20,
+      groupOptions: ["全部混合", "Neuron", "Astrocyte", "Microglia", "Ependymal"],
+      fieldOptions: [
+        { key: "cell", label: "哪種細胞" },
+        { key: "morphology", label: "形態 / 染色變化" },
+        { key: "reversible", label: "可逆性" },
+        { key: "disease", label: "臨床意義 / 相關疾病" }
+      ],
+      rows: [
+        {
+          group: "Neuron", answer: "Red neuron",
+          cell: "Neuron",
+          morphology: "胞體縮小；胞質深紅（eosinophilic）；核固縮（pyknotic）；核仁消失；Nissl substance 流失",
+          reversible: "不可逆——走向死亡",
+          disease: "缺氧 / 缺血性損傷的不可逆終末形態"
+        },
+        {
+          group: "Neuron", answer: "Central chromatolysis",
+          cell: "Neuron",
+          morphology: "細胞體腫大（rounding）；核移至周邊；核仁變大（RNA 需求↑）；Nissl 散至周邊（dispersion，非溶解）",
+          reversible: "可逆（axon reaction，嘗試再生）",
+          disease: "Axon 切斷 / 損傷後再生反應；核仁↑因需大量 protein / RNA"
+        },
+        {
+          group: "Astrocyte", answer: "Reactive gliosis（astrogliosis）",
+          cell: "Astrocyte",
+          morphology: "Hypertrophy、hyperplasia；GFAP↑；process 延長增厚；核增大（>10 μm）；核仁明顯",
+          reversible: "過度則形成 glial scar 阻礙再生",
+          disease: "腦損傷後修復反應；過度 → glial scar"
+        },
+        {
+          group: "Astrocyte", answer: "Gemistocytic astrocyte",
+          cell: "Astrocyte",
+          morphology: "胞體膨大；豐富 bright-pink eosinophilic 胞質；核偏位（eccentric）；stout ramifying process",
+          reversible: "可進展為 reactive gliosis",
+          disease: "急性損傷期常見"
+        },
+        {
+          group: "Astrocyte", answer: "Alzheimer type II astrocyte",
+          cell: "Astrocyte",
+          morphology: "核增大（正常 2–3 倍）；中央染色質淡染；核內 glycogen droplet；核仁明顯",
+          reversible: "—",
+          disease: "代謝損傷（高血氨、低血糖、肝性腦病變）；與 Alzheimer disease 無直接關係"
+        },
+        {
+          group: "Astrocyte", answer: "Rosenthal fibers",
+          cell: "Astrocyte",
+          morphology: "長形紫紅色粗厚柱狀包涵體（ubiquitin + αβ-crystallin + HSP27）",
+          reversible: "—",
+          disease: "慢性 gliosis；Pilocytic astrocytoma；Alexander disease（GFAP mutation）"
+        },
+        {
+          group: "Astrocyte", answer: "Corpora amylacea",
+          cell: "Astrocyte",
+          morphology: "深紫紅色；concentrically laminated；5–50 μm；PAS+；位於 astrocytic end process / perivascular zone",
+          reversible: "—",
+          disease: "Astrocyte degeneration；與 aging 相關"
+        },
+        {
+          group: "Microglia", answer: "Gitter cells（foam cells）",
+          cell: "Microglia",
+          morphology: "胞質充滿脂質空泡（吞噬 necrotic myelin 後）",
+          reversible: "—",
+          disease: "壞死區清道夫；見於 infarct / demyelination"
+        },
+        {
+          group: "Microglia", answer: "Rod cells",
+          cell: "Microglia",
+          morphology: "細長桿狀核；常見於 microglial nodule 中",
+          reversible: "—",
+          disease: "病毒性腦炎特徵（HIV、梅毒）"
+        },
+        {
+          group: "Microglia", answer: "Neuronophagia",
+          cell: "Microglia",
+          morphology: "Microglia 聚集包圍仍可辨認形態的 dying neuron，將其吞噬",
+          reversible: "—",
+          disease: "Viral encephalitis 特徵；鑑別 microglial nodule（中間是 debris 非活 neuron）"
+        },
+        {
+          group: "Ependymal", answer: "Granular ependymitis",
+          cell: "Ependymal",
+          morphology: "腦室壁表面變粗糙顆粒狀；subependymal gliosis 造成",
+          reversible: "—",
+          disease: "Hydrocephalus、neurosyphilis（梅毒）、CMV / 慢性腦室炎"
+        }
+      ]
+    },
+
+    demyelinating: {
+      label: "Demyelinating",
+      answerLabel: "疾病名稱",
+      defaultGroup: "全部混合",
+      defaultField: "micro",
+      mixedLimit: 20,
+      groupOptions: ["全部混合", "MS", "CPM", "NMO", "ADEM / ANHE", "Leukodystrophy"],
+      fieldOptions: [
+        { key: "mechanism", label: "機轉" },
+        { key: "trigger", label: "誘因 / 病因" },
+        { key: "epidemiology", label: "流行病學" },
+        { key: "clinical", label: "臨床表現" },
+        { key: "gross", label: "Gross 病理" },
+        { key: "micro", label: "Micro 病理" },
+        { key: "differentiator", label: "鑑別特徵" },
+        { key: "treatment", label: "治療" }
+      ],
+      rows: [
+        {
+          group: "MS", answer: "Multiple Sclerosis（MS）",
+          mechanism: "CD4⁺ Th1/Th17 攻擊 myelin antigens（MBP、MOG、PLP）；B cell 異常；HLA-DRB1*15:01（3-fold risk）",
+          trigger: "EBV 感染（32 倍風險）；低維生素 D（遠離赤道）；HLA 基因",
+          epidemiology: "F:M = 2:1；20–40 歲高峰；全球 1.1–2.5 million；RRMS 85%",
+          clinical: "Optic neuritis；INO（MLF 病灶）；Lhermitte's sign；Uhthoff's phenomenon；Time + Space 分離診斷",
+          gross: "Periventricular gray-pink plaques（Dawson's fingers，沿髓靜脈）；多發雙側",
+          micro: "Active：lipid-laden mac + lymphocyte；Chronic inactive：gliosis；Shadow plaque（thin myelin）；Sub-pial grey matter lesion（最 specific）；皮質病灶 Type 1/2/3",
+          differentiator: "Time + space 分離；白質 + 灰質同時受累；Sub-pial lesion 最 specific；relapsing-remitting",
+          treatment: "Acute：methylprednisolone；DMT：interferon-β / natalizumab / anti-CD20（ocrelizumab）"
+        },
+        {
+          group: "CPM", answer: "Central Pontine Myelinolysis（CPM / ODS）",
+          mechanism: "Rapid correction of hyponatremia → osmolality↑ → oligodendrocyte 受損",
+          trigger: "Na⁺ 矯正過快（>10–12 mEq/L/day）",
+          epidemiology: "慢性酒精中毒、低血鈉患者",
+          clinical: "Pseudobulbar palsy；四肢無力；locked-in syndrome",
+          gross: "對稱性 pons demyelination",
+          micro: "Inflammation absent；neurons and axons well preserved；oligodendrocyte 受損為主",
+          differentiator: "Inflammation absent（vs MS/NMO）；neurons/axons preserved；osmolality history",
+          treatment: "預防：Na⁺ 矯正≤10–12 mEq/L/day；已發生→支持性照護"
+        },
+        {
+          group: "NMO", answer: "Neuromyelitis Optica（NMO）",
+          mechanism: "AQP4-IgG 攻擊 astrocyte 上 AQP4 → primary inflammatory astrocytopathy with secondary demyelination",
+          trigger: "AQP4-IgG 自體免疫；女性偏多（>MS）",
+          epidemiology: "女性為主；初次發作預後差；AQP4-IgG 陽性",
+          clinical: "Bilateral optic neuritis + spinal cord demyelination；病灶在視神經+脊髓中央（非 periventricular）",
+          gross: "視神經 + 脊髓中央病灶；necrosis",
+          micro: "Necrosis；neutrophils / eosinophils 浸潤；血管壁 Ig / complement deposition；AQP4 expression 消失",
+          differentiator: "Primary astrocytopathy（非 primary demyelination）；中性球/嗜酸球（vs MS 淋巴球）；AQP4 消失",
+          treatment: "Acute：high-dose steroid / plasmapheresis；預防：immunosuppression / anti-CD20"
+        },
+        {
+          group: "ADEM / ANHE", answer: "ADEM（Acute Disseminated Encephalomyelitis）",
+          mechanism: "感染/疫苗後自體免疫攻擊 myelin；MOGAD 最常見 clinical presentation",
+          trigger: "病毒感染或疫苗後 1–3 週",
+          epidemiology: "兒童及青年；20% 死亡；多數 complete recovery",
+          clinical: "Encephalopathy + 多灶神經症狀（delirium, stupor, seizure, coma）；急性病程",
+          gross: "多灶病灶，外觀相似（monophasic）",
+          micro: "所有 lesion 外觀相似（monophasic → 無 active/inactive 分別）",
+          differentiator: "Monophasic（vs MS polyphasic）；無 CSF oligoclonal bands；所有病灶同時期",
+          treatment: "Pulse steroid；難治 → IVIG / plasmapheresis"
+        },
+        {
+          group: "ADEM / ANHE", answer: "ANHE（Acute Necrotizing Hemorrhagic Encephalomyelitis）",
+          mechanism: "ADEM 的 hyperacute form；更強烈免疫反應 + 血管壁損傷",
+          trigger: "上呼吸道感染後；較 ADEM 更劇烈",
+          clinical: "爆發性病程；快速意識喪失；死亡率極高",
+          differentiator: "ADEM 最嚴重型；hemorrhagic necrosis；常繼發 URI",
+          treatment: "高劑量 steroid + IVIG / plasmapheresis + intensive supportive care"
+        },
+        {
+          group: "Leukodystrophy", answer: "Metachromatic leukodystrophy（MLD）",
+          mechanism: "ARSA（arylsulfatase A）↓ → sulfatide 堆積（lysosomal storage）；白質為主",
+          trigger: "AR 遺傳；ARSA 基因突變",
+          gross: "雙側對稱性白質脫髓鞘萎縮",
+          micro: "Toluidine blue → metachromatic 染色（sulfatide）",
+          differentiator: "Fatal；no treatment available；toluidine blue metachromatic staining",
+          treatment: "無有效治療（fatal because no treatment is available）"
+        },
+        {
+          group: "Leukodystrophy", answer: "Krabbe disease",
+          mechanism: "GALC（galactocerebroside β-galactosidase）↓ → galactosylsphingosine 累積",
+          trigger: "AR 遺傳；GALC 基因突變",
+          epidemiology: "<2 歲死亡",
+          gross: "雙側對稱性白質脫髓鞘",
+          micro: "Globoid cells（多核巨噬細胞含 galactocerebroside）",
+          differentiator: "Globoid cells；<2 歲；AR",
+          treatment: "支持性；部分可考慮 HSCT"
+        },
+        {
+          group: "Leukodystrophy", answer: "ALD（X-linked adrenoleukodystrophy）",
+          mechanism: "ABCD1（peroxisomal transporter）LOF → VLCFA 無法進入 peroxisome 代謝，累積於腦",
+          trigger: "X-linked 遺傳；ABCD1 基因突變",
+          gross: "雙側對稱性白質病變",
+          differentiator: "X-linked；VLCFA 累積；adrenal gland 亦受累"
+        },
+        {
+          group: "Leukodystrophy", answer: "PMD（Pelizaeus-Merzbacher）",
+          mechanism: "PLP1 mutation（CNS myelin major protein）→ OL 無法合成正常 myelin → diffuse hypomyelination",
+          trigger: "X-linked 遺傳；PLP1 基因突變",
+          micro: "Hypomyelination（非 demyelination）；可伴 cerebellar neuronal loss → ataxia",
+          differentiator: "X-linked；hypomyelination（先天不足，非後天喪失）；PLP1"
+        }
+      ]
+    },
+
+    neurodegen: {
+      label: "Neurodegenerative",
+      answerLabel: "疾病名稱",
+      defaultGroup: "全部混合",
+      defaultField: "micro",
+      mixedLimit: 20,
+      groupOptions: ["全部混合", "AD", "FTLD-tau", "FTLD-TDP", "ALS", "PD", "MSA", "Prion"],
+      fieldOptions: [
+        { key: "mutation", label: "基因突變" },
+        { key: "protein_aggregation", label: "蛋白聚集" },
+        { key: "mechanism", label: "機轉（GoF/LoF/Stress）" },
+        { key: "initial_region", label: "Initial brain region" },
+        { key: "spread", label: "Spread / Location" },
+        { key: "gross", label: "Gross 病理" },
+        { key: "micro", label: "Micro 病理" },
+        { key: "ihc", label: "IHC / Stain" },
+        { key: "clinical", label: "臨床表現" }
+      ],
+      rows: [
+        {
+          group: "AD", answer: "Alzheimer's Disease（AD）",
+          mutation: "APP（chr21）、PSEN1（chr14）、PSEN2（chr1）→ familial；APOE ε4（sporadic 最重要風險因子）；Down syndrome（trisomy 21）→ APP dosage↑",
+          protein_aggregation: "Aβ42（extracellular neuritic plaques）+ 過磷酸化 tau（intracellular NFT）；含全部 6 種 tau isoform（3R+4R）",
+          mechanism: "GoF：β/γ-secretase → Aβ42↑ → oligomer → synaptic dysfunction → tau 過磷酸化 → NFT → neurodegeneration；APOE 多功能：APP transcription、Aβ secretion/clearance、myelination、mitochondria",
+          initial_region: "Basal temporal lobe / orbitofrontal cortex",
+          spread: "Tau：locus coeruleus/entorhinal → hippocampus → neocortex；Aβ：basal temporal → neocortex → lower brainstem",
+          gross: "皮質萎縮（額頂顳）；widened sulci；hydrocephalus ex vacuo；occipital sparing",
+          micro: "Neuritic plaques（amyloid core + dystrophic neurites）；NFT（過磷酸化 tau，silver stain）；CAA（Congo red+）；Hirano bodies（CA1）",
+          ihc: "Aβ-IHC；phospho-tau IHC；Congo red（CAA）",
+          clinical: "隱匿發病：記憶喪失→失智；onset to death 5–10 years；prodromal fMRI：hippocampus/neocortex hyperactivity"
+        },
+        {
+          group: "FTLD-tau", answer: "FTLD-tau（Pick / PSP / CBD）",
+          mutation: "MAPT（chr17q21）：missense mutation（tau 磷酸化親和力↑）或 splicing mutation（改變 3R:4R 比例）",
+          protein_aggregation: "Pick disease：3R tau（Pick bodies，argyrophilic round）；PSP / CBD：4R tau；FTDP-17T：3R+4R",
+          mechanism: "GoF：tau 脫離 microtubule → aggregation → cytotoxicity；LoF：microtubule 穩定性喪失 → 軸突運輸障礙",
+          initial_region: "Frontal lobe + temporal lobe",
+          spread: "額顳葉漸進萎縮；prion-like spread 沿神經迴路",
+          gross: "Knife-edge gyri（刀刃狀萎縮）；PSP/CBD：caudate 萎縮",
+          micro: "Pick bodies（圓形，eosinophilic，argyrophilic，3R tau+）；PSP/CBD：4R tau tufted astrocytes",
+          ihc: "Tau IHC（3R 或 4R 特異性抗體）；silver stain",
+          clinical: "人格行為改變（額葉）或語言障礙（顳葉）；<65 歲；PSP/CBD 另有 parkinsonism"
+        },
+        {
+          group: "FTLD-TDP", answer: "FTLD-TDP",
+          mutation: "C9orf72（最常見，GGGGCC repeat）/ GRN（progranulin↓）/ TARDBP（最少見）",
+          protein_aggregation: "TDP-43 nuclear clearing + cytoplasmic aggregation；GRN：needle-like intranuclear TDP-43；C9orf72：dipeptide repeat proteins（最主要毒性，2025）",
+          mechanism: "LoF：nuclear TDP-43 消失 → RNA metabolism 異常；GoF：胞質 TDP-43 aggregation；C9orf72：dipeptide toxicity 為主（RNA foci 次之）",
+          initial_region: "Frontal lobe + temporal lobe",
+          spread: "額顳葉為主；C9orf72：FTD / ALS / 混合；TDP-43 prion-like 擴散",
+          micro: "TDP-43 cytoplasmic inclusions（nuclear↓）；GRN：needle-like intranuclear；C9orf72：dipeptide inclusion",
+          ihc: "TDP-43 IHC（cytoplasmic↑, nuclear↓）；FUS IHC",
+          clinical: "行為/語言改變；C9orf72：FTD-ALS 重疊；GRN augmentation phase III trial halted 2025 Oct"
+        },
+        {
+          group: "ALS", answer: "ALS（Lou Gehrig's disease）",
+          mutation: "SOD1（familial 50%，第一個 ALS 基因 1993）/ C9orf72 / TARDBP / FUS；90% sporadic",
+          protein_aggregation: "TDP-43 cytoplasmic inclusions（97% ALS）；Bunina bodies（cystatin C⁺，TDP-43⁻，ALS-specific）；SOD1 mutant aggregation（SOD1 亞型）",
+          mechanism: "Non-cell autonomous（SOD1 GoF）：microglia NOX↑（superoxide）/ oligodendrocyte MCT1↓（lactate↓）/ astrocyte EAAT2↓（excitotoxicity）",
+          initial_region: "脊髓前角（LMN）+ 運動皮質（UMN）+ corticospinal tract",
+          spread: "Corticospinal tract + anterior root 退化；15% ALS 後期出現 FTD（C9orf72 overlap）",
+          gross: "前脊髓萎縮；lateral column 變薄（LFB 不上色 = corticospinal tract 退化）；anterior root 細",
+          micro: "前角神經元喪失 + Betz cell 喪失；TDP-43 inclusions（97%）；Bunina bodies；astrogliosis / microgliosis",
+          ihc: "TDP-43；ubiquitin；cystatin C（Bunina bodies）",
+          clinical: "UMN + LMN 同時受損；感覺/認知通常正常（重要鑑別）；LFB 可示 corticospinal tract 退化"
+        },
+        {
+          group: "PD", answer: "Parkinson's Disease（PD）",
+          mutation: "SNCA（AD，第一個家族性 PD 基因；missense/dup/trip）/ LRRK2（AD，最常見 familial）/ PINK1 / Parkin（AR，juvenile）/ GBA1（風險因子）",
+          protein_aggregation: "α-synuclein → Lewy body（intracytoplasmic，dense core + pale halo）+ Lewy neurite；僅 SNCA mutation 才有 Lewy body",
+          mechanism: "GoF：multimerization → Lewy body → trafficking/endolysosomal/mitophagy 損壞；LoF：vesicle docking 喪失；Stress：ROS↑",
+          initial_region: "Dorsal motor nucleus of CN9/10 + olfactory bulb（Braak Stage 1）",
+          spread: "α-synuclein prion-like：dorsal MN / olfactory → SNpc / BG / diencephalon → 整個 neocortex（Braak 3–4 = 臨床症狀）",
+          gross: "SNpc 色素消失（neuromelanin↓）；locus ceruleus 亦同",
+          micro: "Lewy body（eosinophilic，dense core + pale halo）；dopaminergic neuron 喪失（SNpc）；Lewy neurite",
+          ihc: "α-synuclein IHC（cytoplasmic，round；區別 MSA GCI in oligodendrocyte）",
+          clinical: "TRAP；10–15% 後期發展為 dementia with Lewy bodies（DLB）；DBS + levodopa 無法阻止進展"
+        },
+        {
+          group: "MSA", answer: "Multiple System Atrophy（MSA）",
+          mutation: "Sporadic（無特定 SNCA mutation 或致病基因）",
+          protein_aggregation: "α-synuclein in oligodendrocyte → GCIs（Papp-Lantos bodies，新月形，silver stain+）；同蛋白不同 cell environment → 不同 strain（One polymorph, one disease）",
+          mechanism: "GoF：α-synuclein 在 oligodendrocyte 形成不同 strain → GCI → white matter tract degeneration",
+          initial_region: "無單一起始腦區；三系統同時受累",
+          spread: "Striatonigral（BG/putamen/SNpc）→ parkinsonism；Olivopontocerebellar（cerebellum）→ ataxia；Autonomic → orthostatic hypotension",
+          gross: "三系統萎縮（putamen / SNpc / cerebellum / olive）",
+          micro: "GCIs（Papp-Lantos bodies）in oligodendrocyte（silver stain 新月形）；神經元喪失 + gliosis",
+          ihc: "α-synuclein IHC（GCI 在 oligodendrocyte；區別 PD 的 Lewy body 在 neuron）",
+          clinical: "MSA-P（parkinsonism）+ MSA-C（ataxia）+ autonomic dysfunction；Sporadic"
+        },
+        {
+          group: "Prion", answer: "Prion Disease（CJD / FFI / Kuru）",
+          mutation: "散發 >85%（自發）；familial：PRNP mutation（codon 178 D178N → FFI）；acquired：BSE / Kuru",
+          protein_aggregation: "PrPSc（β-sheet，抗 proteinase K，Phase I，infectivity↑，非直接 neurotoxin）→ PrPL（oligomers，Phase II，真正 neurotoxic）；Kuru plaque（PAS+，Congo red+）",
+          mechanism: "GoF conformational templating：PrPc → PrPSc → 累積達 threshold → PrPL → neurotoxicity；codon 129 heterozygote 有保護",
+          initial_region: "廣泛 diffuse；CJD：cerebral cortex；Kuru：cerebellum；FFI：thalamus",
+          spread: "廣泛 spongiform encephalopathy；跨物種靠 conformational selection（dominant + minor forms ensemble）",
+          gross: "Spongiform encephalopathy；gyrus atrophy；空洞乾淨（vs stroke 有血塊，abscess 有膿）",
+          micro: "Spongiform change（neurons & glia 空泡化）；Kuru plaque（小腦，PAS+/Congo red+）；幾乎無 inflammation；FFI 不表現 spongiform change（重要例外！）",
+          ihc: "PrPSc IHC；PAS（Kuru plaque）；Congo red",
+          clinical: "極罕見（1/1,000,000）；rapidly progressive dementia；數月內死亡；FFI：失眠/ataxia/自律神經障礙，不表現 spongiform change"
+        }
+      ]
+    },
+
+    infection: {
+      label: "CNS Infection",
+      answerLabel: "病原 / 感染類型",
+      defaultGroup: "全部混合",
+      defaultField: "special_feature",
+      mixedLimit: 20,
+      groupOptions: ["全部混合", "Bacterial", "Viral", "Fungal", "Parasitic"],
+      fieldOptions: [
+        { key: "pathogen_type", label: "病原種類" },
+        { key: "entry_route", label: "入侵途徑" },
+        { key: "location", label: "好發位置 / 偏好細胞" },
+        { key: "gross", label: "Gross 病理" },
+        { key: "micro", label: "Micro / Inclusion body" },
+        { key: "special_feature", label: "特徵性發現" },
+        { key: "clinical", label: "臨床表現" }
+      ],
+      rows: [
+        {
+          group: "Bacterial", answer: "Acute Pyogenic Meningitis（細菌性腦膜炎）",
+          pathogen_type: "Neonate：E.coli / GBS；Adolescent：N.meningitidis；Elderly：S.pneumoniae / Listeria；Immunocompromised：Anaerobic / Klebsiella",
+          entry_route: "Hematogenous（最常見）/ direct implantation / local extension / PNS transport",
+          location: "Leptomeninges（arachnoid + pia）+ CSF",
+          gross: "Vessel engorgement；meninges 不透明增厚；可見 abscess",
+          micro: "Neutrophil infiltrate in subarachnoid space",
+          special_feature: "後遺症：leptomeningeal fibrosis → obstructive hydrocephalus；依年齡選菌種",
+          clinical: "Headache, neck stiffness, Kernig / Brudzinski sign, photophobia"
+        },
+        {
+          group: "Bacterial", answer: "TB Meningoencephalitis",
+          pathogen_type: "Mycobacterium tuberculosis（肺 TB 血行播散）",
+          entry_route: "Hematogenous from lung",
+          location: "Basilar region（brainstem / pons）—重要！",
+          gross: "Caseating necrosis（與肺 TB 相似）",
+          micro: "Caseating granuloma；acid fast stain 陽性",
+          special_feature: "Basilar predilection；acid fast stain；慢性病程",
+          clinical: "慢性；常侵犯 basilar region（brainstem/pons）"
+        },
+        {
+          group: "Viral", answer: "HSV-1 Encephalitis",
+          pathogen_type: "Herpes simplex virus 1",
+          entry_route: "Trigeminal ganglion 逆行 + olfactory nerve",
+          location: "Inferior / medial temporal lobe + orbital gyri of frontal lobe",
+          gross: "Necrotizing hemorrhagic lesion（temporal lobe）",
+          micro: "Necrotizing hemorrhagic inflammation；Cowdry type A intranuclear inclusion（紅色，halo，chromatin 至核邊）",
+          special_feature: "Cowdry type A intranuclear inclusion；顳葉出血壞死",
+          clinical: "行為改變（frontal）；記憶障礙（hippocampus）；嗅幻覺"
+        },
+        {
+          group: "Viral", answer: "CMV Encephalitis",
+          pathogen_type: "Cytomegalovirus",
+          entry_route: "Hematogenous；intrauterine（先天感染）",
+          location: "Periventricular subependymal region（CMV receptor 高表現）+ neocortex gray matter",
+          gross: "Periventricular lesion",
+          micro: "Owl's eye inclusion（intranuclear + intracytoplasmic）",
+          special_feature: "Owl's eye；先天感染→microcephaly + periventricular calcification；IHC 確認",
+          clinical: "Immunocompromised / infant；先天感染→sensorineural hearing loss"
+        },
+        {
+          group: "Viral", answer: "Rabies Encephalitis",
+          pathogen_type: "Rabies virus",
+          entry_route: "Peripheral nerve 逆行入 CNS；1–3 月潛伏期",
+          location: "Brainstem / 小腦 / hippocampus",
+          micro: "Negri body（eosinophilic cytoplasmic inclusion，紫紅色）；perivascular cuffing",
+          special_feature: "Negri body（eosinophilic cytoplasmic）；1–3 月潛伏期；幾乎 100% 致死",
+          clinical: "恐水症；行為改變；nearly 100% lethal"
+        },
+        {
+          group: "Viral", answer: "PML（JC virus）",
+          pathogen_type: "JC polyomavirus（reactivation）",
+          entry_route: "Reactivation in immunocompromised host",
+          location: "White matter（oligodendrocyte）",
+          micro: "LFB patchy demyelination；oligodendrocyte enlarged nucleus + glassy viral inclusion；atypical astrocytes",
+          special_feature: "Oligodendrocyte enlarged nucleus + glassy inclusion；只在 immunocompromised 發病",
+          clinical: "AIDS / immunocompromised；progressive multifocal demyelinating pattern"
+        },
+        {
+          group: "Fungal", answer: "Cryptococcal Meningitis",
+          pathogen_type: "Cryptococcus neoformans",
+          entry_route: "Hematogenous（immunocompromised / 鴿子接觸）",
+          location: "Meninges；perivascular spaces（soap bubble）",
+          gross: "Soap bubble-like multiple areas of tissue destruction",
+          micro: "Thick capsule（mucin stain 紅色）；H&E 下莢膜空空不顯色",
+          special_feature: "Soap bubble lesion；thick capsule（mucin stain）；鴿子接觸史",
+          clinical: "Immunocompromised；subacute meningitis"
+        },
+        {
+          group: "Parasitic", answer: "Cerebral Toxoplasmosis",
+          pathogen_type: "Toxoplasma gondii（reactivation）",
+          entry_route: "Hematogenous reactivation（immunocompromised）",
+          location: "Cortex（gray-white junction）+ deep gray nuclei（embolic distribution）",
+          gross: "Multiple ring-enhancing lesions（CT / MRI）",
+          micro: "Bradyzoite pseudocyst；necrotizing lesion",
+          special_feature: "Ring-enhancing lesion；先排除 toxoplasmosis；bradyzoite pseudocyst（GMS/PAS）",
+          clinical: "Immunocompromised；需與 lymphoma / TB / glioma 鑑別"
+        }
+      ]
+    },
+
+    cerebrovascular: {
+      label: "Cerebrovascular / Trauma",
+      answerLabel: "疾病 / 損傷類型",
+      defaultGroup: "全部混合",
+      defaultField: "gross_time",
+      mixedLimit: 20,
+      groupOptions: ["全部混合", "Ischemia", "Hemorrhage", "Trauma", "Herniation"],
+      fieldOptions: [
+        { key: "type_mechanism", label: "類型 / 機轉" },
+        { key: "location", label: "好發位置" },
+        { key: "gross_time", label: "Gross / 時程演變" },
+        { key: "micro", label: "Micro 病理" },
+        { key: "complication", label: "重要併發症" },
+        { key: "clinical", label: "臨床特徵" }
+      ],
+      rows: [
+        {
+          group: "Ischemia", answer: "Pale（Bland）Infarct",
+          type_mechanism: "Thrombosis → arterial occlusion → liquefactive necrosis；缺血性 infarct 85%",
+          location: "MCA territory 最常見",
+          gross_time: "0–6hr 無變化；6–48hr red neurons + myelin loss；2–10d liquefactive necrosis + gitter cells；>10d gliosis + encephalomalacia（囊腔）",
+          micro: "Red neurons → liquefactive necrosis → gitter cells → astrogliosis",
+          complication: "Encephalomalacia；cerebral edema → IICP；MCA 好發",
+          clinical: "缺血性 85%；依部位決定症狀"
+        },
+        {
+          group: "Ischemia", answer: "Hemorrhagic（Red）Infarct",
+          type_mechanism: "Embolism → reperfusion injury → petechial hemorrhage；缺血後再灌流",
+          location: "Embolic distribution；皮質（cortical ribbon）",
+          gross_time: "紅色出血點（petechial）；廣泛白質點狀出血 = 骨髓 emboli",
+          micro: "Necrosis + petechial hemorrhage",
+          complication: "Reperfusion hemorrhage；溶栓有爭議",
+          clinical: "與 emboli 有關；骨髓 emboli 可致廣泛白質點狀出血"
+        },
+        {
+          group: "Ischemia", answer: "Lacunar Infarct",
+          type_mechanism: "Hypertension → arteriosclerosis of deep penetrating arteries → small vessel ischemia",
+          location: "Putamen > GP > thalamus > internal capsule > deep WM > caudate > pons",
+          gross_time: "Lake-like cavity（<15 mm）",
+          micro: "Tissue loss + gliosis + lipid-laden macrophages",
+          complication: "Multiple lacunae → vascular dementia",
+          clinical: "Hypertension history；putamen 最常見"
+        },
+        {
+          group: "Hemorrhage", answer: "Hypertensive Cerebral Hemorrhage",
+          type_mechanism: "Hypertension → lipohyalinosis / fibrinoid necrosis of small vessels → rupture",
+          location: "Basal ganglia / thalamus 65%；pons 15%；cerebellum 10%；cortex 10%",
+          gross_time: "急性血腫；mass effect；midline shift",
+          complication: "Herniation；hydrocephalus",
+          clinical: "Hypertension history；BG/thalamus 最常見（65%）"
+        },
+        {
+          group: "Hemorrhage", answer: "Berry Aneurysm（SAH）",
+          type_mechanism: "Congenital vessel wall defect（Circle of Willis 分支處）→ rupture → subarachnoid hemorrhage",
+          location: "Anterior communicating a. 40%；MCA 34%；posterior communicating a. 20%；basilar 4%",
+          gross_time: "Diffuse subarachnoid hemorrhage；vessel wall 僅剩 hyalinized fibrous tissue，無肌肉層",
+          complication: "Vasospasm；rebleeding；hydrocephalus；急症不能等 rupture",
+          clinical: "突發 thunderclap headache；年輕人；acute emergency"
+        },
+        {
+          group: "Trauma", answer: "Epidural Hematoma",
+          type_mechanism: "Middle meningeal artery（動脈）破裂；常伴 temporal bone fracture",
+          location: "Dura 上、頭蓋骨下",
+          gross_time: "Lens-shaped hematoma；快速擴大（動脈壓）",
+          complication: "Herniation；需緊急手術",
+          clinical: "Lucid interval 後急速惡化；temporal bone fracture；需緊急處理"
+        },
+        {
+          group: "Trauma", answer: "Subdural Hematoma",
+          type_mechanism: "Cortical bridging vein（靜脈）破裂；緩慢出血",
+          location: "Dura 下、腦基質上",
+          gross_time: "Crescent-shaped hematoma；慢性者呈黃色液體（xanthochromia）",
+          complication: "老人（brain atrophy）/ 嬰幼兒（shaken baby）易發；慢性 → SDH",
+          clinical: "老人 / 嬰幼兒；慢性發病；brain atrophy → vein stretch"
+        },
+        {
+          group: "Trauma", answer: "Diffuse Axonal Injury（DAI）",
+          type_mechanism: "Shear-type forces（有角加速度）→ widespread axonal disruption",
+          location: "Gray-white junction；corpus callosum；brainstem",
+          gross_time: "CT 初期無特異；MRI：axonal swelling / hemorrhagic dots",
+          micro: "Asymmetric axonal swelling；microglia 活化；fiber tract degeneration",
+          complication: "LOC >6 hr；Shaken baby syndrome（最常見 DAI）；反覆外傷 → CTE（tau deposition）",
+          clinical: "Angular acceleration history；LOC >6hr；CT 初期陰性"
+        },
+        {
+          group: "Herniation", answer: "Transtentorial（Uncinate）Herniation",
+          type_mechanism: "Supratentorial mass → medial temporal lobe 經 tentorium 向下疝出",
+          location: "Tentorium cerebelli；uncus 壓迫 CN3 + posterior cerebral a.",
+          gross_time: "Uncus 壓迫；Duret hemorrhage（中腦 / 橋腦出血性病灶）",
+          complication: "CN3 palsy（瞳孔散大）；posterior cerebral a. → 視力障礙；Kernohan's notch（contralateral hemiparesis）；Duret hemorrhage",
+          clinical: "CN3 palsy 為早期警訊；Kernohan's notch（同側錐體徵）；Duret hemorrhage"
+        },
+        {
+          group: "Herniation", answer: "Tonsillar Herniation",
+          type_mechanism: "Posterior fossa mass / generalized IICP → cerebellar tonsil 向下疝出 foramen magnum",
+          location: "Foramen magnum",
+          complication: "小腦 tonsil 壓迫 medulla → 呼吸心跳驟停（life threatening）",
+          clinical: "最危急 herniation；medulla 受壓→猝死；life threatening"
+        }
+      ]
+    },
+
+    tumor: {
+      label: "CNS Tumor",
+      answerLabel: "腫瘤 / 診斷",
+      defaultGroup: "全部混合",
+      defaultField: "type_grading",
+      mixedLimit: 20,
+      groupOptions: ["全部混合","成人型瀰漫性膠瘤","侷限性膠瘤","室管膜腫瘤","脈絡叢腫瘤","神經元 / 膠神經元腫瘤","胚胎性腫瘤","腦膜腫瘤","血液淋巴腫瘤","轉移性腫瘤"],
+      fieldOptions: [
+        { key: "type_grading", label: "tumor type / grading" },
+        { key: "age", label: "age" },
+        { key: "criteria", label: "criteria" },
+        { key: "grading_criteria", label: "grading criteria" },
+        { key: "clinical", label: "症狀 / 表現 / 治療" },
+        { key: "location", label: "位置" },
+        { key: "imaging", label: "影像 / gross clue" },
+        { key: "molecular", label: "分子 / 基因" },
+        { key: "histology", label: "組織學 / 細胞學" },
+        { key: "ihc_test", label: "IHC / FISH / supporting test" },
+        { key: "prognosis", label: "預後" }
+      ],
+      rows: [
+        { group:"成人型瀰漫性膠瘤", answer:"Astrocytoma, IDH-mutant", type_grading:"Adult-type diffuse glioma；CNS WHO grade 2-4", age:"Adults around 30+ to 40+", criteria:"IDH-mutant；ATRX loss/mutation + TP53 mutation + absence of 1p/19q codeletion", grading_criteria:"AMEN：only A = grade 2；A + M = grade 3；E / N / CDKN2A/B homozygous deletion = grade 4", clinical:"Seizures，headaches，focal neurological deficits", location:"Predominantly cerebral hemispheres", imaging:"MRI non-enhancing，T1 hypointense / T2 hyperintense", molecular:"IDH1/IDH2 mutation + TP53 + ATRX；CDKN2A/B hom del → grade 4", histology:"Diffuse infiltration；nuclear atypia；gemistocytes（abundant eosinophilic cytoplasm, eccentric nuclei）", ihc_test:"IDH1 R132H IHC positive；CDKN2A/B by FISH", prognosis:"OS about 5 to 15 years" },
+        { group:"成人型瀰漫性膠瘤", answer:"Oligodendroglioma, IDH-mutant and 1p/19q-codeleted", type_grading:"Adult-type diffuse glioma；CNS WHO grade 2 or 3", age:"Adults around 30+ to 40+", criteria:"IDH mutation + 1p/19q codeletion（缺一不可）", grading_criteria:"WHO grade 3：>=2.5 mitoses/mm²；often with microvascular proliferation", clinical:"Several years of neurological complaints, often seizures", location:"White matter of cerebral hemispheres", molecular:"IDH mutation + 1p/19q codeletion；TERT promoter common", histology:"Round nuclei, fried egg perinuclear halo, chicken-wire capillaries, calcification, microcysts", ihc_test:"FISH for 1p/19q；IDH1 R132H IHC", prognosis:"OS about 10 to 20 years" },
+        { group:"成人型瀰漫性膠瘤", answer:"Glioblastoma, IDH-wildtype", type_grading:"Adult-type diffuse glioma；CNS WHO grade 4", age:"Usually older adults；peak 55-85 years", criteria:"IDH-wt astrocytic glioma with MVP, necrosis, TERT mutation, EGFR amp, or +7/−10", grading_criteria:"Grade 4；necrosis or microvascular proliferation；or TERT / EGFR / +7/−10 alone suffices", location:"Most commonly supratentorial；subcortical white matter", imaging:"MRI ring-enhancing mass", molecular:"IDH-wildtype；TERT promoter mutation；EGFR amplification；+7/−10", histology:"Pseudopalisading necrosis, glomeruloid microvascular proliferation, nuclear atypia, frequent mitoses", ihc_test:"Molecular criteria（TERT, EGFR, +7/−10）can upgrade lower-grade morphology", prognosis:"Poorest prognosis；OS 6 months to 2 years" },
+        { group:"侷限性膠瘤", answer:"Pilocytic astrocytoma", type_grading:"Circumscribed glioma；CNS WHO grade 1", age:"Most common CNS neoplasm of childhood；peak age 8-13 years", criteria:"More discrete border vs diffuse gliomas；unique biphasic histology", grading_criteria:"Directly listed as CNS WHO grade 1", clinical:"Often treated by resection alone", location:"Most common cerebellum；also optic nerves, third ventricle, hypothalamus, spinal cord", imaging:"MRI：cystic tumor with enhancing mural nodule in cerebellum", molecular:"KIAA1549::BRAF fusion most common；BRAF V600E also possible", histology:"Biphasic：loose microcystic + compact fibrillary；piloid cells；Rosenthal fibers；EGBs", ihc_test:"KIAA1549::BRAF fusion or BRAF V600E on molecular workup", prognosis:"Total resection：10-year survival ~100%" },
+        { group:"室管膜腫瘤", answer:"Ependymoma", type_grading:"Ependymal tumor；most grade 2, grade 3 variants exist", age:"Children near 4th ventricle；adults in spinal cord", criteria:"Tumor near ependyma-lined ventricular system；location + molecular subtype determine classification", grading_criteria:"Grade 3：increased cellularity, mitoses, necrosis, microvascular proliferation", location:"Ventricular system and spinal cord", imaging:"Gross can fill 4th ventricle", molecular:"ZFTA fusion（ST）；EZHIP/H3K28M（PF-A, poor）；NF2（SP）；MYCN（SP, poor）", histology:"Perivascular pseudorosette（最重要）；ependymal rosette；round/oval nuclei；fibrillary background", ihc_test:"Subtype classification by location + molecular, not single IHC", prognosis:"PFA poor；resection extent and molecular subtype > grade" },
+        { group:"脈絡叢腫瘤", answer:"Choroid plexus tumors", type_grading:"Papillary neoplasms；papilloma grade 1 / atypical papilloma grade 2 / carcinoma grade 3", age:"Children：lateral ventricle；adults：4th ventricle", criteria:"Papillary intraventricular neoplasm from choroid plexus epithelium", grading_criteria:"Papilloma：low/absent mitosis；atypical：increased mitoses；carcinoma：>5 mitoses/10 HPF + density + pleomorphism + necrosis", location:"Lateral ventricle（children）；4th ventricle（adults）", histology:"Papillary architecture, single-layer epithelium over fibrovascular cores；carcinoma：sheets + blurring + necrosis" },
+        { group:"神經元 / 膠神經元腫瘤", answer:"Ganglioglioma", type_grading:"Neuronal/glioneuronal tumor；WHO grade 1", age:"Usually age 30 years or less", criteria:"Mixture of mature neurons + glial cells in superficial lesion, often temporal lobe", grading_criteria:"WHO grade 1；mitotic figures rare", clinical:"Often presents with seizures；surgery helps seizure control", location:"Superficial, often temporal lobe", imaging:"MRI：temporal lobe cystic lesion with solid nodule", molecular:"BRAF p.V600E or other MAPK alterations", histology:"Mature neurons + low-grade glial cells；dysmorphic, sometimes binucleated ganglion cells；cystic component", prognosis:"Slow-growing；resection effective for seizure control" },
+        { group:"神經元 / 膠神經元腫瘤", answer:"DNET（Dysembryoplastic neuroepithelial tumor）", type_grading:"Neuronal/glioneuronal tumor；WHO grade 1", age:"Children and young adults", criteria:"Cortical expanded lesion with mucin-rich nodules and floating neurons", grading_criteria:"WHO grade 1", clinical:"Early-onset focal epilepsy；favorable after resection", location:"Expanded gray matter；most common superficial temporal lobe", histology:"Mucin-rich nodules of oligodendrocyte-like cells with floating neurons in mucoid matrix；skip lesion", prognosis:"Favorable after resection" },
+        { group:"胚胎性腫瘤", answer:"Medulloblastoma", type_grading:"Embryonal tumor；all subtypes CNS WHO grade 4", age:"Children and adults in their 20s", criteria:"Molecularly divided into WNT, SHH, Group 3, Group 4", grading_criteria:"All subtypes are grade 4", clinical:"Rapid growth→hydrocephalus；放療反應良好；整體 75% 存活率", location:"Cerebellum / 4th ventricle；can spread via CSF to spinal cord", imaging:"Gross：tumor filling 4th ventricle", molecular:"WNT-activated；SHH-activated（TP53-wt or TP53-mut）；Group 3（MYC amp）；Group 4（CDK6/NMYC amp）", histology:"Small blue round cells；Homer-Wright rosette；desmoplastic/nodular；large cell/anaplastic", prognosis:"Varies by subgroup；WNT best（5y OS 95%）；Group 3/4 poor（5y OS ~50%）" },
+        { group:"腦膜腫瘤", answer:"Meningioma", type_grading:"Meningeal tumor；most common extra-axial CNS tumor；WHO grade 1-3", age:"Predominantly adults；F:M ~2-3:1；uncommon in children", criteria:"Arachnoid meningothelial tumor attached to dura；NF2 → multiple lesions", grading_criteria:"Grade 2：≥4 mitoses/10 HPF, brain invasion, or ≥3/5 atypical features；grade 3：≥20 mitoses, frank anaplasia, TERT mutation, or CDKN2A/B hom del", clinical:"Usually slow-growing；vague symptoms or focal deficits from mass effect", location:"Dural-based；parasagittal falx, convexity, sphenoid wing, posterior fossa", imaging:"Broad-based dural mass；MRI dural tail sign；solid globular circumscribed", molecular:"NF2 central（sporadic ~50-60%）；also SMO, AKT1, TRAF7, KLF4, POLR2A, BAP1, CDKN2A", histology:"Whorling pattern, psammoma bodies, transitional pattern, nuclear pseudoinclusions", ihc_test:"TERT promoter mutation or CDKN2A/B hom del → grade 3 upgrade", prognosis:"Total excision grade 1/2 does well；grade 3 poor" },
+        { group:"血液淋巴腫瘤", answer:"Primary CNS Lymphoma", type_grading:"Hematolymphoid tumor；most common = diffuse large B-cell lymphoma（CD20+）", age:"Non-immunosuppressed：frequency increases after age 60", criteria:"Occurs first in CNS without systemic lymphoma evidence", clinical:"May involve eye；immunosuppressed：EBV-associated；non-immunosuppressed：PDL1 amp/overexpression", location:"Often multifocal；periventricular；basal ganglia + thalamus bilateral；eye may be involved", imaging:"MRI periventricular enhancing masses", molecular:"Immunosuppressed：EBV-associated；non-immunosuppressed：PDL1 amplification", histology:"Large atypical lymphoid cells with perivascular cuffing；subarachnoid spread", ihc_test:"CD20 IHC positive；Liu stain smear shows large atypical lymphoid cells" },
+        { group:"轉移性腫瘤", answer:"Metastatic tumors to CNS", type_grading:"Secondary CNS tumors；no WHO grading", criteria:"Secondary CNS tumors derived from systemic primary sites", clinical:"Can be first sign of systemic cancer；solitary → local treatment；leptomeningeal carcinomatosis → hard to treat", location:"Gray-white matter junction throughout cerebral hemispheres and cerebellum", imaging:"MRI：multiple ring-enhancing lesions at gray-white junction；peri-focal edema" }
+      ]
+    }
+  };
+
+  const TOPIC_ORDER = ["cells","cell_response","demyelinating","neurodegen","infection","cerebrovascular","tumor"];
+
+  let currentTopicKey = "neurodegen";
+  let currentGroup = "";
+  let currentField = "";
+  let pairs = [];
+  let matched = 0;
+  let errors = 0;
+  let selClue = null;
+  let selAns = null;
+  let answerMode = false;
+
+  const el = {
+    title: document.getElementById("pageTitle"),
+    subtitle: document.getElementById("pageSubtitle"),
+    answerColLabel: document.getElementById("answerColLabel"),
+    answerTableHeader: document.getElementById("answerTableHeader"),
+    fieldHeaderLabel: document.getElementById("fieldHeaderLabel"),
+    topicChips: document.getElementById("topicChips"),
+    groupChips: document.getElementById("groupChips"),
+    fieldChips: document.getElementById("fieldChips"),
+    clueCol: document.getElementById("clueCol"),
+    answerCol: document.getElementById("answerCol"),
+    progressText: document.getElementById("progressText"),
+    errorText: document.getElementById("errorText"),
+    statusBar: document.getElementById("statusBar"),
+    quizView: document.getElementById("quizView"),
+    answerView: document.getElementById("answerView"),
+    answerBody: document.getElementById("answerBody"),
+    fieldHeader: document.getElementById("fieldHeader"),
+    toggleAnswerBtn: document.getElementById("toggleAnswerBtn"),
+    resultCard: document.getElementById("resultCard"),
+    resultScore: document.getElementById("resultScore"),
+    resultText: document.getElementById("resultText"),
+    resetBtn: document.getElementById("resetBtn"),
+    playAgainBtn: document.getElementById("playAgainBtn")
+  };
+
+  function getTopic() { return ALL_TOPICS[currentTopicKey]; }
+
+  function shuffle(list) { return [...list].sort(() => Math.random() - 0.5); }
+
+  function getFieldLabel() {
+    return getTopic().fieldOptions.find(f => f.key === currentField)?.label ?? currentField;
+  }
+
+  function buildPool() {
+    const t = getTopic();
+    const mixedLabel = "全部混合";
+    let pool = t.rows;
+    if (currentGroup !== mixedLabel) {
+      pool = pool.filter(r => r.group === currentGroup);
+    }
+    pool = pool.filter(r => {
+      const v = r[currentField];
+      return typeof v === "string" && v.trim().length > 0 && typeof r.answer === "string" && r.answer.trim().length > 0;
+    });
+    if (currentGroup === mixedLabel && pool.length > (t.mixedLimit || 16)) {
+      pool = shuffle(pool).slice(0, t.mixedLimit || 16);
+    }
+    return pool.map((r, i) => ({ id: `${r.group}-${r.answer}-${i}`, clue: r[currentField], answer: r.answer }));
+  }
+
+  function updateStats() {
+    el.progressText.textContent = `${matched} / ${pairs.length}`;
+    el.errorText.textContent = String(errors);
+  }
+
+  function chip(text, active, onClick, extraClass) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = `cat-btn${active ? " active" : ""}`;
+    if (extraClass) b.className += " " + extraClass;
+    b.textContent = text;
+    b.addEventListener("click", onClick);
+    return b;
+  }
+
+  function renderFilters() {
+    const t = getTopic();
+    // topics
+    el.topicChips.innerHTML = "";
+    TOPIC_ORDER.forEach(key => {
+      el.topicChips.appendChild(chip(ALL_TOPICS[key].label, key === currentTopicKey, () => {
+        currentTopicKey = key;
+        currentGroup = ALL_TOPICS[key].defaultGroup;
+        currentField = ALL_TOPICS[key].defaultField;
+        hideAnswers();
+        startGame();
+      }));
+    });
+    // groups
+    el.groupChips.innerHTML = "";
+    t.groupOptions.forEach(g => {
+      el.groupChips.appendChild(chip(g, g === currentGroup, () => {
+        currentGroup = g;
+        hideAnswers();
+        startGame();
+      }));
+    });
+    // fields
+    el.fieldChips.innerHTML = "";
+    t.fieldOptions.forEach(f => {
+      el.fieldChips.appendChild(chip(f.label, f.key === currentField, () => {
+        currentField = f.key;
+        hideAnswers();
+        startGame();
+      }));
+    });
+  }
+
+  function makeTile(text, id, type) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tile";
+    b.textContent = text; b.dataset.id = id; b.dataset.type = type;
+    b.addEventListener("click", () => onTile(b));
+    return b;
+  }
+
+  function renderBoard() {
+    const sc = shuffle(pairs.map(p => ({ id: p.id, text: p.clue })));
+    const sa = shuffle(pairs.map(p => ({ id: p.id, text: p.answer })));
+    el.clueCol.innerHTML = ""; el.answerCol.innerHTML = "";
+    sc.forEach(item => el.clueCol.appendChild(makeTile(item.text, item.id, "clue")));
+    sa.forEach(item => el.answerCol.appendChild(makeTile(item.text, item.id, "answer")));
+  }
+
+  function clearSelected(type) {
+    document.querySelectorAll(`.tile[data-type="${type}"].selected`).forEach(t => t.classList.remove("selected"));
+  }
+
+  function onTile(tile) {
+    if (tile.classList.contains("matched") || tile.classList.contains("flashing")) return;
+    if (tile.dataset.type === "clue") { clearSelected("clue"); tile.classList.add("selected"); selClue = tile; }
+    else { clearSelected("answer"); tile.classList.add("selected"); selAns = tile; }
+    if (selClue && selAns) tryMatch();
+  }
+
+  function tryMatch() {
+    const c = selClue, a = selAns;
+    selClue = null; selAns = null;
+    if (c.dataset.id === a.dataset.id) {
+      c.classList.remove("selected"); a.classList.remove("selected");
+      c.classList.add("matched"); a.classList.add("matched");
+      matched++; updateStats();
+      if (matched === pairs.length) setTimeout(showResult, 320);
+      return;
+    }
+    errors++;
+    c.classList.remove("selected"); a.classList.remove("selected");
+    c.classList.add("flashing"); a.classList.add("flashing");
+    updateStats();
+    setTimeout(() => { c.classList.remove("flashing"); a.classList.remove("flashing"); }, 400);
+  }
+
+  function showResult() {
+    const total = pairs.length;
+    const pct = Math.round((total / ((total + errors) || 1)) * 100);
+    el.resultScore.textContent = `${pct}%`;
+    el.resultScore.className = `big ${pct === 100 ? "perfect" : pct >= 70 ? "good" : "bad"}`;
+    el.resultText.textContent = errors === 0
+      ? "這輪完全答對，可以切換其他欄位或群組。"
+      : pct >= 70
+        ? `共 ${total} 題，錯 ${errors} 次，再刷一次會更穩。`
+        : `共 ${total} 題，錯 ${errors} 次，建議先看顯示答案再回來配對。`;
+    el.resultCard.classList.add("show");
+  }
+
+  function renderAnswers() {
+    el.answerBody.innerHTML = "";
+    const label = getFieldLabel();
+    el.fieldHeader.textContent = label;
+    el.fieldHeaderLabel.textContent = label;
+    if (pairs.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td"); td.colSpan = 2;
+      td.textContent = "此群組在此欄位沒有可配對的資料。";
+      tr.appendChild(td); el.answerBody.appendChild(tr); return;
+    }
+    pairs.forEach(p => {
+      const tr = document.createElement("tr");
+      const tc = document.createElement("td"); tc.textContent = p.clue;
+      const ta = document.createElement("td"); ta.textContent = p.answer;
+      tr.appendChild(tc); tr.appendChild(ta); el.answerBody.appendChild(tr);
+    });
+  }
+
+  function setAnswerMode(next) {
+    answerMode = next;
+    if (answerMode) renderAnswers();
+    el.quizView.classList.toggle("hidden", answerMode);
+    el.statusBar.classList.toggle("hidden", answerMode);
+    el.answerView.classList.toggle("hidden", !answerMode);
+    el.resultCard.classList.remove("show");
+    el.toggleAnswerBtn.textContent = answerMode ? "返回配對" : "顯示答案";
+  }
+
+  function hideAnswers() { setAnswerMode(false); }
+
+  function startGame() {
+    const t = getTopic();
+    document.title = `${t.label} 配合題`;
+    el.title.textContent = "神經病理 配合題";
+    el.subtitle.textContent = `主題：${t.label}　｜　選群組 → 選欄位 → 左右配對`;
+    el.answerColLabel.textContent = t.answerLabel;
+    el.answerTableHeader.textContent = t.answerLabel;
+    pairs = buildPool();
+    matched = 0; errors = 0; selClue = null; selAns = null;
+    el.resultCard.classList.remove("show");
+    el.fieldHeaderLabel.textContent = getFieldLabel();
+    renderFilters();
+    renderBoard();
+    updateStats();
+  }
+
+  el.resetBtn.addEventListener("click", () => { hideAnswers(); startGame(); });
+  el.playAgainBtn.addEventListener("click", () => { hideAnswers(); startGame(); });
+  el.toggleAnswerBtn.addEventListener("click", () => answerMode ? hideAnswers() : setAnswerMode(true));
+
+  startGame();
+  </script>
+</body>
+</html>
